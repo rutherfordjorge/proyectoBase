@@ -1,14 +1,14 @@
 namespace ProyectoBase.Domain.Exceptions
 {
     /// <summary>
-    /// Represents errors that occur when a requested resource cannot be found in the domain.
+    /// Representa errores que ocurren cuando no se encuentra un recurso solicitado en el dominio.
     /// </summary>
     public class NotFoundException : DomainException
     {
-        private const string DefaultMessage = "The requested resource was not found.";
+        private const string DefaultMessage = "El recurso solicitado no fue encontrado.";
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NotFoundException"/> class.
+        /// Inicializa una nueva instancia de la clase <see cref="NotFoundException"/>.
         /// </summary>
         public NotFoundException()
             : base(DefaultMessage)
@@ -16,9 +16,9 @@ namespace ProyectoBase.Domain.Exceptions
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NotFoundException"/> class with a specified error message.
+        /// Inicializa una nueva instancia de la clase <see cref="NotFoundException"/> con un mensaje de error específico.
         /// </summary>
-        /// <param name="message">The message that describes the error.</param>
+        /// <param name="message">El mensaje que describe el error.</param>
         public NotFoundException(string message)
             : base(message)
         {

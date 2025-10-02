@@ -10,15 +10,15 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 namespace ProyectoBase.Api.Swagger;
 
 /// <summary>
-/// Provides helper methods to configure Swagger generation.
+/// Proporciona métodos auxiliares para configurar la generación de Swagger.
 /// </summary>
 public static class SwaggerGenOptionsExtensions
 {
     /// <summary>
-    /// Maps enumeration values to the <c>code</c> representation defined by <see cref="EnumMemberAttribute"/>.
+    /// Mapea los valores de las enumeraciones a la representación <c>code</c> definida por <see cref="EnumMemberAttribute"/>.
     /// </summary>
-    /// <param name="options">The Swagger generation options.</param>
-    /// <param name="assemblies">Assemblies that may contain enums to map.</param>
+    /// <param name="options">Las opciones de generación de Swagger.</param>
+    /// <param name="assemblies">Los ensamblados que pueden contener enumeraciones a mapear.</param>
     public static void MapCodeEnumsFromAssemblies(this SwaggerGenOptions options, params Assembly[] assemblies)
     {
         if (options == null)
@@ -56,7 +56,7 @@ public static class SwaggerGenOptionsExtensions
         {
             Type = "string",
             Enum = values,
-            Description = $"Enumeration of {enumType.Name} values.",
+            Description = $"Enumeración de valores de {enumType.Name}.",
         };
     }
 

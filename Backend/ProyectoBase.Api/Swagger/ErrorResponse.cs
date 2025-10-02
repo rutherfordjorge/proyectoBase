@@ -1,27 +1,27 @@
 namespace ProyectoBase.Api.Swagger;
 
 /// <summary>
-/// Represents the standardized error contract returned by the API.
+/// Representa el contrato de error estandarizado que devuelve la API.
 /// </summary>
 public sealed record ErrorResponse
 {
     /// <summary>
-    /// Gets the unique identifier associated with the request.
+    /// Obtiene el identificador único asociado a la solicitud.
     /// </summary>
     public required string TraceId { get; init; }
 
     /// <summary>
-    /// Gets the HTTP status code returned by the API.
+    /// Obtiene el código de estado HTTP devuelto por la API.
     /// </summary>
     public required int Status { get; init; }
 
     /// <summary>
-    /// Gets a short description of the error.
+    /// Obtiene una descripción breve del error.
     /// </summary>
     public required string Error { get; init; }
 
     /// <summary>
-    /// Gets additional error details when available.
+    /// Obtiene detalles adicionales del error cuando están disponibles.
     /// </summary>
     public object? Details { get; init; }
 }

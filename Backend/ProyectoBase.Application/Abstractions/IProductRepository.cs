@@ -7,47 +7,47 @@ using ProyectoBase.Domain.Entities;
 namespace ProyectoBase.Application.Abstractions
 {
     /// <summary>
-    /// Provides data access operations for <see cref="Product"/> entities.
+    /// Proporciona operaciones de acceso a datos para entidades <see cref="Product"/>.
     /// </summary>
     public interface IProductRepository
     {
         /// <summary>
-        /// Retrieves a product by its unique identifier.
+        /// Recupera un producto por su identificador único.
         /// </summary>
-        /// <param name="id">The identifier of the product to retrieve.</param>
-        /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
-        /// <returns>The matching <see cref="Product"/> instance, if it exists.</returns>
+        /// <param name="id">El identificador del producto que se desea obtener.</param>
+        /// <param name="cancellationToken">Token para cancelar la operación asincrónica.</param>
+        /// <returns>La instancia de <see cref="Product"/> correspondiente, si existe.</returns>
         Task<Product?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Retrieves all products available in the data store.
+        /// Recupera todos los productos disponibles en el almacén de datos.
         /// </summary>
-        /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
-        /// <returns>A read-only collection containing the available products.</returns>
+        /// <param name="cancellationToken">Token para cancelar la operación asincrónica.</param>
+        /// <returns>Una colección de solo lectura con los productos disponibles.</returns>
         Task<IReadOnlyCollection<Product>> GetAllAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Persists a new product in the data store.
+        /// Persiste un nuevo producto en el almacén de datos.
         /// </summary>
-        /// <param name="product">The product to persist.</param>
-        /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <param name="product">El producto que se desea guardar.</param>
+        /// <param name="cancellationToken">Token para cancelar la operación asincrónica.</param>
+        /// <returns>Una tarea que representa la operación asincrónica.</returns>
         Task AddAsync(Product product, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Updates an existing product in the data store.
+        /// Actualiza un producto existente en el almacén de datos.
         /// </summary>
-        /// <param name="product">The product instance containing the updates.</param>
-        /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <param name="product">La instancia del producto que contiene los cambios.</param>
+        /// <param name="cancellationToken">Token para cancelar la operación asincrónica.</param>
+        /// <returns>Una tarea que representa la operación asincrónica.</returns>
         Task UpdateAsync(Product product, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Removes a product from the data store.
+        /// Elimina un producto del almacén de datos.
         /// </summary>
-        /// <param name="id">The identifier of the product to delete.</param>
-        /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <param name="id">El identificador del producto que se desea eliminar.</param>
+        /// <param name="cancellationToken">Token para cancelar la operación asincrónica.</param>
+        /// <returns>Una tarea que representa la operación asincrónica.</returns>
         Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
     }
 }

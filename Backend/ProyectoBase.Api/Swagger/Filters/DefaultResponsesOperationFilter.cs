@@ -8,7 +8,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 namespace ProyectoBase.Api.Swagger.Filters;
 
 /// <summary>
-/// Ensures that default error responses are documented for all operations.
+/// Garantiza que las respuestas de error predeterminadas queden documentadas para todas las operaciones.
 /// </summary>
 public sealed class DefaultResponsesOperationFilter : IOperationFilter
 {
@@ -25,9 +25,9 @@ public sealed class DefaultResponsesOperationFilter : IOperationFilter
             throw new ArgumentNullException(nameof(context));
         }
 
-        AddResponse(operation, context, StatusCodes.Status400BadRequest, "Bad request.");
-        AddResponse(operation, context, StatusCodes.Status404NotFound, "Resource not found.");
-        AddResponse(operation, context, StatusCodes.Status500InternalServerError, "Unexpected error.");
+        AddResponse(operation, context, StatusCodes.Status400BadRequest, "Solicitud inválida.");
+        AddResponse(operation, context, StatusCodes.Status404NotFound, "Recurso no encontrado.");
+        AddResponse(operation, context, StatusCodes.Status500InternalServerError, "Error inesperado.");
     }
 
     private static void AddResponse(OpenApiOperation operation, OperationFilterContext context, int statusCode, string description)

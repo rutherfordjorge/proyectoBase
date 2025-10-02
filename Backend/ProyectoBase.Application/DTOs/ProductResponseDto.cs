@@ -3,32 +3,32 @@ using System;
 namespace ProyectoBase.Application.DTOs
 {
     /// <summary>
-    /// Represents the product data returned by application services.
+    /// Representa los datos de producto devueltos por los servicios de la aplicación.
     /// </summary>
     public class ProductResponseDto
     {
         /// <summary>
-        /// Gets or sets the unique identifier of the product.
+        /// Obtiene o establece el identificador único del producto.
         /// </summary>
         public Guid Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the product.
+        /// Obtiene o establece el nombre del producto.
         /// </summary>
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the optional description of the product.
+        /// Obtiene o establece la descripción opcional del producto.
         /// </summary>
         public string? Description { get; set; }
 
         /// <summary>
-        /// Gets or sets the price of the product.
+        /// Obtiene o establece el precio del producto.
         /// </summary>
         public decimal Price { get; set; }
 
         /// <summary>
-        /// Gets or sets the available stock of the product.
+        /// Obtiene o establece el inventario disponible del producto.
         /// </summary>
         public int Stock { get; set; }
     }

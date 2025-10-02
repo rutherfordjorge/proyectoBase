@@ -1,14 +1,14 @@
 namespace ProyectoBase.Domain.Exceptions
 {
     /// <summary>
-    /// Represents errors that occur when the domain detects invalid data.
+    /// Representa errores que ocurren cuando el dominio detecta datos no válidos.
     /// </summary>
     public class ValidationException : DomainException
     {
-        private const string DefaultMessage = "The provided data is not valid.";
+        private const string DefaultMessage = "Los datos proporcionados no son válidos.";
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ValidationException"/> class.
+        /// Inicializa una nueva instancia de la clase <see cref="ValidationException"/>.
         /// </summary>
         public ValidationException()
             : base(DefaultMessage)
@@ -16,9 +16,9 @@ namespace ProyectoBase.Domain.Exceptions
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ValidationException"/> class with a specified error message.
+        /// Inicializa una nueva instancia de la clase <see cref="ValidationException"/> con un mensaje de error específico.
         /// </summary>
-        /// <param name="message">The message that describes the error.</param>
+        /// <param name="message">El mensaje que describe el error.</param>
         public ValidationException(string message)
             : base(message)
         {

@@ -9,15 +9,15 @@ using ProyectoBase.Application.Services.Products;
 namespace ProyectoBase.Application;
 
 /// <summary>
-/// Provides extension methods to register application layer services within the dependency injection container.
+/// Proporciona métodos de extensión para registrar los servicios de la capa de aplicación en el contenedor de dependencias.
 /// </summary>
 public static class DependencyInjection
 {
     /// <summary>
-    /// Registers the application layer dependencies including services, validators and AutoMapper profiles.
+    /// Registra las dependencias de la capa de aplicación, incluidos servicios, validadores y perfiles de AutoMapper.
     /// </summary>
-    /// <param name="services">The service collection to configure.</param>
-    /// <returns>The configured <see cref="IServiceCollection"/> instance.</returns>
+    /// <param name="services">La colección de servicios que se configurará.</param>
+    /// <returns>La instancia configurada de <see cref="IServiceCollection"/>.</returns>
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);

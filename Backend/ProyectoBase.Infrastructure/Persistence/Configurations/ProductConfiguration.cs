@@ -5,14 +5,14 @@ using ProyectoBase.Domain.Entities;
 namespace ProyectoBase.Infrastructure.Persistence.Configurations
 {
     /// <summary>
-    /// Defines the entity framework mapping configuration for <see cref="Product"/> entities.
+    /// Define la configuración de mapeo de Entity Framework para las entidades <see cref="Product"/>.
     /// </summary>
     public class ProductConfiguration : IEntityTypeConfiguration<Product>
     {
         /// <summary>
-        /// Configures the entity type builder with the mapping rules for the <see cref="Product"/> entity.
+        /// Configura el generador de tipos de entidad con las reglas de mapeo para la entidad <see cref="Product"/>.
         /// </summary>
-        /// <param name="builder">The builder that is used to configure the entity type.</param>
+        /// <param name="builder">El generador que se utiliza para configurar el tipo de entidad.</param>
         public void Configure(EntityTypeBuilder<Product> builder)
         {
             builder.ToTable("Products");

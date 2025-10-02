@@ -9,16 +9,16 @@ using ProyectoBase.Domain.Entities;
 namespace ProyectoBase.Infrastructure.Persistence.Repositories
 {
     /// <summary>
-    /// Provides Entity Framework Core based persistence operations for <see cref="Product"/> entities.
+    /// Proporciona operaciones de persistencia basadas en Entity Framework Core para las entidades <see cref="Product"/>.
     /// </summary>
     public class ProductRepository : IProductRepository
     {
         private readonly ApplicationDbContext _context;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProductRepository"/> class.
+        /// Inicializa una nueva instancia de la clase <see cref="ProductRepository"/>.
         /// </summary>
-        /// <param name="context">The database context used to interact with the persistence store.</param>
+        /// <param name="context">El contexto de base de datos utilizado para interactuar con el almacén de persistencia.</param>
         public ProductRepository(ApplicationDbContext context)
         {
             _context = context;

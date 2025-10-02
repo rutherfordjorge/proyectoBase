@@ -8,15 +8,15 @@ using ProyectoBase.Infrastructure.Persistence;
 namespace ProyectoBase.Infrastructure.Persistence.Migrations
 {
     /// <summary>
-    /// Represents the Entity Framework Core model snapshot for the application database context.
+    /// Representa la instantánea del modelo de Entity Framework Core para el contexto de base de datos de la aplicación.
     /// </summary>
     [DbContext(typeof(ApplicationDbContext))]
     internal class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
         /// <summary>
-        /// Builds the model used to generate database migrations.
+        /// Construye el modelo que se utiliza para generar las migraciones de base de datos.
         /// </summary>
-        /// <param name="modelBuilder">The model builder used to configure the entity mappings.</param>
+        /// <param name="modelBuilder">El generador del modelo empleado para configurar el mapeo de las entidades.</param>
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618

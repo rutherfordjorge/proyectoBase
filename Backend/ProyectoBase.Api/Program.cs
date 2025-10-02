@@ -68,7 +68,7 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "JWT Authorization header using the Bearer scheme.",
+        Description = "Encabezado de autorización JWT usando el esquema Bearer.",
     });
 
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -109,7 +109,7 @@ var jwtSettings = builder.Configuration.GetSection(JwtOptions.SectionName).Get<J
 
 if (string.IsNullOrWhiteSpace(jwtSettings.Key))
 {
-    throw new InvalidOperationException("JWT signing key is not configured.");
+    throw new InvalidOperationException("La clave de firma JWT no está configurada.");
 }
 
 var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
@@ -133,7 +133,7 @@ builder.Services.AddCors(options =>
         {
             if (builder.Environment.IsProduction())
             {
-                throw new InvalidOperationException("Cors:AllowedOrigins configuration is required in production.");
+                throw new InvalidOperationException("La configuración Cors:AllowedOrigins es obligatoria en producción.");
             }
 
             policy.AllowAnyOrigin()

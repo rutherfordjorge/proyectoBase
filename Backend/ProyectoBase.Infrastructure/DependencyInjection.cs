@@ -13,7 +13,7 @@ using ProyectoBase.Infrastructure.Persistence.Repositories;
 namespace ProyectoBase.Infrastructure;
 
 /// <summary>
-/// Provides extension methods to register infrastructure services and dependencies.
+/// Proporciona métodos de extensión para registrar los servicios y dependencias de la infraestructura.
 /// </summary>
 public static class DependencyInjection
 {
@@ -24,11 +24,11 @@ public static class DependencyInjection
     private const string RepositoryWritePolicyName = "ProductRepository.Write";
 
     /// <summary>
-    /// Registers the services required by the infrastructure layer.
+    /// Registra los servicios necesarios para la capa de infraestructura.
     /// </summary>
-    /// <param name="services">The service collection to configure.</param>
-    /// <param name="configuration">The application configuration source.</param>
-    /// <returns>The configured <see cref="IServiceCollection"/>.</returns>
+    /// <param name="services">La colección de servicios que se configurará.</param>
+    /// <param name="configuration">La fuente de configuración de la aplicación.</param>
+    /// <returns>La instancia configurada de <see cref="IServiceCollection"/>.</returns>
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(services);
@@ -38,7 +38,7 @@ public static class DependencyInjection
 
         if (string.IsNullOrWhiteSpace(connectionString))
         {
-            throw new InvalidOperationException($"Connection string '{DefaultConnectionName}' was not found.");
+            throw new InvalidOperationException($"No se encontró la cadena de conexión '{DefaultConnectionName}'.");
         }
 
         services.AddDbContext<ApplicationDbContext>(options =>
@@ -71,7 +71,7 @@ public static class DependencyInjection
                 sleepDurationProvider: attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt - 1)),
                 onRetry: (exception, timeSpan, retryCount, context) =>
                 {
-                    logger.LogWarning(exception, "Retry {RetryCount} executed after {Delay} seconds.", retryCount, timeSpan.TotalSeconds);
+                    logger.LogWarning(exception, "Reintento {RetryCount} ejecutado después de {Delay} segundos.", retryCount, timeSpan.TotalSeconds);
                 });
 
             var circuitBreakerPolicy = Policy.Handle<Exception>().CircuitBreakerAsync(
@@ -79,10 +79,10 @@ public static class DependencyInjection
                 durationOfBreak: TimeSpan.FromSeconds(30),
                 onBreak: (exception, breakDelay) =>
                 {
-                    logger.LogError(exception, "Circuit opened for {Delay} seconds due to repeated failures.", breakDelay.TotalSeconds);
+                    logger.LogError(exception, "Circuito abierto durante {Delay} segundos debido a fallas reiteradas.", breakDelay.TotalSeconds);
                 },
-                onReset: () => logger.LogInformation("Circuit closed: operations have stabilized."),
-                onHalfOpen: () => logger.LogInformation("Circuit half-open: next call is a trial."));
+                onReset: () => logger.LogInformation("Circuito cerrado: las operaciones se estabilizaron."),
+                onHalfOpen: () => logger.LogInformation("Circuito medio abierto: la siguiente llamada es de prueba."));
 
             registry.Add(RetryPolicyName, retryPolicy);
             registry.Add(CircuitBreakerPolicyName, circuitBreakerPolicy);

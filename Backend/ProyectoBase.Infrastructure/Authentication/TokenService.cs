@@ -12,7 +12,7 @@ using ProyectoBase.Application.Options;
 namespace ProyectoBase.Infrastructure.Authentication;
 
 /// <summary>
-/// Provides utilities to generate JSON Web Tokens for authenticated users.
+/// Proporciona utilidades para generar tokens JSON Web para usuarios autenticados.
 /// </summary>
 public class TokenService : ITokenService
 {
@@ -20,9 +20,9 @@ public class TokenService : ITokenService
     private readonly SigningCredentials _signingCredentials;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="TokenService"/> class.
+    /// Inicializa una nueva instancia de la clase <see cref="TokenService"/>.
     /// </summary>
-    /// <param name="options">The JWT configuration options.</param>
+    /// <param name="options">Las opciones de configuración de JWT.</param>
     public TokenService(IOptions<JwtOptions> options)
     {
         ArgumentNullException.ThrowIfNull(options);
@@ -30,7 +30,7 @@ public class TokenService : ITokenService
 
         if (string.IsNullOrWhiteSpace(_options.Key))
         {
-            throw new InvalidOperationException("JWT signing key configuration is required.");
+            throw new InvalidOperationException("Se requiere configurar la clave de firma para JWT.");
         }
 
         var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Key));

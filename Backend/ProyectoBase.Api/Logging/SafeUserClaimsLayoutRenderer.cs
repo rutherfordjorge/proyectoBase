@@ -10,7 +10,7 @@ using NLog.Web.LayoutRenderers;
 namespace ProyectoBase.Api.Logging;
 
 /// <summary>
-/// Layout renderer that exposes authenticated user claims without leaking personal information.
+/// Representa un layout renderer que expone los claims del usuario autenticado sin revelar información personal.
 /// </summary>
 [LayoutRenderer("safe-user-claims")]
 public sealed class SafeUserClaimsLayoutRenderer : AspNetLayoutRendererBase
@@ -18,10 +18,10 @@ public sealed class SafeUserClaimsLayoutRenderer : AspNetLayoutRendererBase
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
     /// <summary>
-    /// Appends sanitized claim information to the provided string builder.
+    /// Agrega la información saneada de los claims al generador de cadenas proporcionado.
     /// </summary>
-    /// <param name="builder">The builder receiving the rendered output.</param>
-    /// <param name="logEvent">The log event being processed.</param>
+    /// <param name="builder">El generador que recibe la salida renderizada.</param>
+    /// <param name="logEvent">El evento de registro que se está procesando.</param>
     protected override void DoAppend(StringBuilder builder, LogEventInfo logEvent)
     {
         var claimsByType = GetClaimTypeCounts(HttpContextAccessor?.HttpContext);
@@ -34,10 +34,10 @@ public sealed class SafeUserClaimsLayoutRenderer : AspNetLayoutRendererBase
     }
 
     /// <summary>
-    /// Aggregates authenticated user claims by type masking their actual values.
+    /// Agrupa los claims del usuario autenticado por tipo enmascarando sus valores reales.
     /// </summary>
-    /// <param name="httpContext">The HTTP context supplying the claims.</param>
-    /// <returns>A dictionary containing claim type counts.</returns>
+    /// <param name="httpContext">El contexto HTTP que proporciona los claims.</param>
+    /// <returns>Un diccionario que contiene la cantidad de claims por tipo.</returns>
     internal static IReadOnlyDictionary<string, int> GetClaimTypeCounts(HttpContext? httpContext)
     {
         if (httpContext?.User?.Identity?.IsAuthenticated != true)
@@ -55,7 +55,7 @@ public sealed class SafeUserClaimsLayoutRenderer : AspNetLayoutRendererBase
     }
 
     /// <summary>
-    /// Gets a reusable empty dictionary instance to avoid unnecessary allocations.
+    /// Obtiene una instancia reutilizable de diccionario vacío para evitar asignaciones innecesarias.
     /// </summary>
     private static IReadOnlyDictionary<string, int> EmptyClaims { get; } =
         new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
