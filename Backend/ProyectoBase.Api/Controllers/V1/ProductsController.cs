@@ -1,12 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using ProyectoBase.Application.Abstractions;
 using ProyectoBase.Application.DTOs;
+using ProyectoBase.Domain.Exceptions;
 
 namespace ProyectoBase.Api.Controllers.V1;
 
@@ -20,14 +25,16 @@ namespace ProyectoBase.Api.Controllers.V1;
 public class ProductsController : ControllerBase
 {
     private readonly IProductService _productService;
+    private readonly ILogger<ProductsController> _logger;
 
     /// <summary>
     /// Inicializa una nueva instancia de la clase <see cref="ProductsController"/>.
     /// </summary>
     /// <param name="productService">El servicio responsable de las operaciones de productos.</param>
-    public ProductsController(IProductService productService)
+    public ProductsController(IProductService productService, ILogger<ProductsController> logger)
     {
-        _productService = productService;
+        _productService = productService ?? throw new ArgumentNullException(nameof(productService));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <summary>
@@ -40,9 +47,17 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IReadOnlyCollection<ProductResponseDto>>> GetProductsAsync(CancellationToken cancellationToken)
     {
-        var products = await _productService.GetAllAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            var products = await _productService.GetAllAsync(cancellationToken).ConfigureAwait(false);
 
-        return Ok(products);
+            return Ok(products);
+        }
+        catch (DomainException domainException)
+        {
+            _logger.LogWarning(domainException, "Se produjo un error de dominio al obtener el listado de productos.");
+            return CreateErrorResponse(StatusCodes.Status400BadRequest, "Solicitud inválida", domainException.Message);
+        }
     }
 
     /// <summary>
@@ -57,14 +72,29 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<ProductResponseDto>> GetProductByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var product = await _productService.GetByIdAsync(id, cancellationToken).ConfigureAwait(false);
-
-        if (product is null)
+        try
         {
-            return NotFound();
-        }
+            var product = await _productService.GetByIdAsync(id, cancellationToken).ConfigureAwait(false);
 
-        return Ok(product);
+            if (product is null)
+            {
+                const string message = "El producto solicitado no fue encontrado.";
+                _logger.LogWarning("No se encontró el producto con identificador {ProductId}.", id);
+                return CreateErrorResponse(StatusCodes.Status404NotFound, "Recurso no encontrado", message);
+            }
+
+            return Ok(product);
+        }
+        catch (NotFoundException notFoundException)
+        {
+            _logger.LogWarning(notFoundException, "No se encontró el producto con identificador {ProductId}.", id);
+            return CreateErrorResponse(StatusCodes.Status404NotFound, "Recurso no encontrado", notFoundException.Message);
+        }
+        catch (DomainException domainException)
+        {
+            _logger.LogWarning(domainException, "Se produjo un error de dominio al obtener el producto {ProductId}.", id);
+            return CreateErrorResponse(StatusCodes.Status400BadRequest, "Solicitud inválida", domainException.Message);
+        }
     }
 
     /// <summary>
@@ -79,10 +109,29 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<ProductResponseDto>> CreateProductAsync([FromBody] ProductCreateDto product, CancellationToken cancellationToken)
     {
-        var createdProduct = await _productService.CreateAsync(product, cancellationToken).ConfigureAwait(false);
-        var version = HttpContext.GetRequestedApiVersion()?.ToString() ?? "1.0";
+        try
+        {
+            var createdProduct = await _productService.CreateAsync(product, cancellationToken).ConfigureAwait(false);
+            var version = HttpContext.GetRequestedApiVersion()?.ToString() ?? "1.0";
 
-        return CreatedAtAction(nameof(GetProductByIdAsync), new { id = createdProduct.Id, version }, createdProduct);
+            return CreatedAtAction(nameof(GetProductByIdAsync), new { id = createdProduct.Id, version }, createdProduct);
+        }
+        catch (Domain.Exceptions.ValidationException validationException)
+        {
+            _logger.LogWarning(validationException, "Los datos del nuevo producto no superaron la validación de dominio.");
+            return CreateErrorResponse(StatusCodes.Status400BadRequest, "Solicitud inválida", validationException.Message);
+        }
+        catch (ValidationException validationException)
+        {
+            var details = GetFluentValidationDetails(validationException);
+            _logger.LogWarning(validationException, "Los datos del nuevo producto no superaron la validación del modelo.");
+            return CreateErrorResponse(StatusCodes.Status400BadRequest, "Solicitud inválida", details);
+        }
+        catch (DomainException domainException)
+        {
+            _logger.LogWarning(domainException, "Se produjo un error de dominio al crear un producto.");
+            return CreateErrorResponse(StatusCodes.Status400BadRequest, "Solicitud inválida", domainException.Message);
+        }
     }
 
     /// <summary>
@@ -106,9 +155,33 @@ public class ProductsController : ControllerBase
 
         product.Id = id;
 
-        var updatedProduct = await _productService.UpdateAsync(product, cancellationToken).ConfigureAwait(false);
+        try
+        {
+            var updatedProduct = await _productService.UpdateAsync(product, cancellationToken).ConfigureAwait(false);
 
-        return Ok(updatedProduct);
+            return Ok(updatedProduct);
+        }
+        catch (NotFoundException notFoundException)
+        {
+            _logger.LogWarning(notFoundException, "No se encontró el producto con identificador {ProductId} para actualizar.", id);
+            return CreateErrorResponse(StatusCodes.Status404NotFound, "Recurso no encontrado", notFoundException.Message);
+        }
+        catch (Domain.Exceptions.ValidationException validationException)
+        {
+            _logger.LogWarning(validationException, "Los datos del producto {ProductId} no superaron la validación de dominio.", id);
+            return CreateErrorResponse(StatusCodes.Status400BadRequest, "Solicitud inválida", validationException.Message);
+        }
+        catch (ValidationException validationException)
+        {
+            var details = GetFluentValidationDetails(validationException);
+            _logger.LogWarning(validationException, "Los datos del producto {ProductId} no superaron la validación del modelo.", id);
+            return CreateErrorResponse(StatusCodes.Status400BadRequest, "Solicitud inválida", details);
+        }
+        catch (DomainException domainException)
+        {
+            _logger.LogWarning(domainException, "Se produjo un error de dominio al actualizar el producto {ProductId}.", id);
+            return CreateErrorResponse(StatusCodes.Status400BadRequest, "Solicitud inválida", domainException.Message);
+        }
     }
 
     /// <summary>
@@ -124,15 +197,54 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> DeleteProductAsync(Guid id, CancellationToken cancellationToken)
     {
-        var existingProduct = await _productService.GetByIdAsync(id, cancellationToken).ConfigureAwait(false);
-
-        if (existingProduct is null)
+        try
         {
-            return NotFound();
+            var existingProduct = await _productService.GetByIdAsync(id, cancellationToken).ConfigureAwait(false);
+
+            if (existingProduct is null)
+            {
+                const string message = "El producto solicitado no fue encontrado.";
+                _logger.LogWarning("No se encontró el producto con identificador {ProductId} para eliminar.", id);
+                return CreateErrorResponse(StatusCodes.Status404NotFound, "Recurso no encontrado", message);
+            }
+
+            await _productService.DeleteAsync(id, cancellationToken).ConfigureAwait(false);
+
+            return NoContent();
         }
+        catch (NotFoundException notFoundException)
+        {
+            _logger.LogWarning(notFoundException, "No se encontró el producto con identificador {ProductId} para eliminar.", id);
+            return CreateErrorResponse(StatusCodes.Status404NotFound, "Recurso no encontrado", notFoundException.Message);
+        }
+        catch (DomainException domainException)
+        {
+            _logger.LogWarning(domainException, "Se produjo un error de dominio al eliminar el producto {ProductId}.", id);
+            return CreateErrorResponse(StatusCodes.Status400BadRequest, "Solicitud inválida", domainException.Message);
+        }
+    }
 
-        await _productService.DeleteAsync(id, cancellationToken).ConfigureAwait(false);
+    private ObjectResult CreateErrorResponse(int statusCode, string error, object? details)
+    {
+        var traceId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
 
-        return NoContent();
+        var payload = new
+        {
+            traceId,
+            status = statusCode,
+            error,
+            details,
+        };
+
+        return StatusCode(statusCode, payload);
+    }
+
+    private static IReadOnlyCollection<string> GetFluentValidationDetails(ValidationException exception)
+    {
+        return exception.Errors
+            .Select(error => error.ErrorMessage)
+            .Where(message => !string.IsNullOrWhiteSpace(message))
+            .Distinct(StringComparer.Ordinal)
+            .ToArray();
     }
 }
