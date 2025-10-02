@@ -1,7 +1,7 @@
 using MediatR;
-using ProyectoBase.Application.DTOs;
+using ProyectoBase.Api.Application.DTOs;
 
-namespace ProyectoBase.Application.Services.Products
+namespace ProyectoBase.Api.Application.Services.Products
 {
     /// <summary>
     /// Comando utilizado para solicitar la creación de un nuevo producto.

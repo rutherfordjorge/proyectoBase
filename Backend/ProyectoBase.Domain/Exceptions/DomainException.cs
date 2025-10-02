@@ -1,6 +1,6 @@
 using System;
 
-namespace ProyectoBase.Domain.Exceptions
+namespace ProyectoBase.Api.Domain.Exceptions
 {
     /// <summary>
     /// Representa errores que ocurren dentro de la capa de dominio.

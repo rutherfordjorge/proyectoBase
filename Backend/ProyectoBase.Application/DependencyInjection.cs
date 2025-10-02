@@ -3,10 +3,10 @@ using System.Reflection;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using ProyectoBase.Application.Abstractions;
-using ProyectoBase.Application.Services.Products;
+using ProyectoBase.Api.Application.Abstractions;
+using ProyectoBase.Api.Application.Services.Products;
 
-namespace ProyectoBase.Application;
+namespace ProyectoBase.Api.Application;
 
 /// <summary>
 /// Proporciona métodos de extensión para registrar los servicios de la capa de aplicación en el contenedor de dependencias.

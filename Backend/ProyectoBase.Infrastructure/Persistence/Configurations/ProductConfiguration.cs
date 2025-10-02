@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ProyectoBase.Domain.Entities;
+using ProyectoBase.Api.Domain.Entities;
 
-namespace ProyectoBase.Infrastructure.Persistence.Configurations
+namespace ProyectoBase.Api.Infrastructure.Persistence.Configurations
 {
     /// <summary>
     /// Define la configuración de mapeo de Entity Framework para las entidades <see cref="Product"/>.

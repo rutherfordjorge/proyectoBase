@@ -7,7 +7,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using ProyectoBase.Api.IntegrationTests.Infrastructure;
-using ProyectoBase.Application.DTOs;
+using ProyectoBase.Api.Application.DTOs;
 using Xunit;
 
 namespace ProyectoBase.Api.IntegrationTests.Controllers.V1;

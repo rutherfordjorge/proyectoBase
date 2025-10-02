@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using ProyectoBase.Application.Abstractions;
-using ProyectoBase.Domain.Entities;
+using ProyectoBase.Api.Application.Abstractions;
+using ProyectoBase.Api.Domain.Entities;
 
-namespace ProyectoBase.Infrastructure.Persistence.Repositories
+namespace ProyectoBase.Api.Infrastructure.Persistence.Repositories
 {
     /// <summary>
     /// Proporciona operaciones de persistencia basadas en Entity Framework Core para las entidades <see cref="Product"/>.

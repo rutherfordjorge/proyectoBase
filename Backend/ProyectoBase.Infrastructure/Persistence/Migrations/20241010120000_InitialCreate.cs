@@ -1,7 +1,7 @@
 using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ProyectoBase.Infrastructure.Persistence.Migrations
+namespace ProyectoBase.Api.Infrastructure.Persistence.Migrations
 {
     /// <summary>
     /// Define el esquema inicial de la base de datos para la aplicación, incluida la tabla de productos.

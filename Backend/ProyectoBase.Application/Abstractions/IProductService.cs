@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ProyectoBase.Application.DTOs;
+using ProyectoBase.Api.Application.DTOs;
 
-namespace ProyectoBase.Application.Abstractions
+namespace ProyectoBase.Api.Application.Abstractions
 {
     /// <summary>
     /// Define las operaciones disponibles para administrar productos dentro de la capa de aplicación.

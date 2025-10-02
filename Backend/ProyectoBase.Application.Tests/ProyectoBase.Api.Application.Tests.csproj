@@ -7,27 +7,28 @@
     <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
     <CopyDocumentationFileToOutputDirectory>Always</CopyDocumentationFileToOutputDirectory>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <AssemblyName>ProyectoBase.Api.Application.Tests</AssemblyName>
+    <RootNamespace>ProyectoBase.Api.Application.Tests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
+    <PackageReference Include="FluentValidation.TestHelper" Version="11.9.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="xunit" Version="2.9.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.9" />
-    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.10" />
-    <PackageReference Include="Polly" Version="7.2.4" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.0" />
+    <PackageReference Include="coverlet.collector" Version="6.0.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.507">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ProyectoBase.Application\ProyectoBase.Application.csproj" />
-    <ProjectReference Include="..\ProyectoBase.Domain\ProyectoBase.Domain.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Persistence\Migrations\**\*.cs" />
+    <ProjectReference Include="..\ProyectoBase.Api\ProyectoBase.Api.Api.csproj" />
+    <ProjectReference Include="..\ProyectoBase.Application\ProyectoBase.Api.Application.csproj" />
   </ItemGroup>
 </Project>

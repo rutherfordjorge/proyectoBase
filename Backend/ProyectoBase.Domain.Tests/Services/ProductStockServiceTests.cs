@@ -3,13 +3,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using ProyectoBase.Domain.Entities;
-using ProyectoBase.Domain.Exceptions;
-using ProyectoBase.Domain.Repositories;
-using ProyectoBase.Domain.Services;
+using ProyectoBase.Api.Domain.Entities;
+using ProyectoBase.Api.Domain.Exceptions;
+using ProyectoBase.Api.Domain.Repositories;
+using ProyectoBase.Api.Domain.Services;
 using Xunit;
 
-namespace ProyectoBase.Domain.Tests.Services;
+namespace ProyectoBase.Api.Domain.Tests.Services;
 
 public class ProductStockServiceTests
 {

@@ -3,7 +3,7 @@ using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
-using ProyectoBase.Api.Logging;
+using ProyectoBase.Api.Api.Logging;
 using Xunit;
 
 namespace ProyectoBase.Api.IntegrationTests.Logging;

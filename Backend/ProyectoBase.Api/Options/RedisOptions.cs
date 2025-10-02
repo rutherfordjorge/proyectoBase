@@ -1,4 +1,4 @@
-namespace ProyectoBase.Api.Options;
+namespace ProyectoBase.Api.Api.Options;
 
 public class RedisOptions
 {

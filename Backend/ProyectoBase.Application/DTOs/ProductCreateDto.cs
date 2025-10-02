@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ProyectoBase.Application.DTOs
+namespace ProyectoBase.Api.Application.DTOs
 {
     /// <summary>
     /// Representa los datos necesarios para crear un nuevo producto.

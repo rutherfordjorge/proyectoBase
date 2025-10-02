@@ -4,6 +4,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <AssemblyName>ProyectoBase.Api.IntegrationTests</AssemblyName>
+    <RootNamespace>ProyectoBase.Api.IntegrationTests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="6.12.0" />
@@ -26,9 +28,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ProyectoBase.Api\ProyectoBase.Api.csproj" />
-    <ProjectReference Include="..\ProyectoBase.Application\ProyectoBase.Application.csproj" />
-    <ProjectReference Include="..\ProyectoBase.Domain\ProyectoBase.Domain.csproj" />
-    <ProjectReference Include="..\ProyectoBase.Infrastructure\ProyectoBase.Infrastructure.csproj" />
+    <ProjectReference Include="..\ProyectoBase.Api\ProyectoBase.Api.Api.csproj" />
+    <ProjectReference Include="..\ProyectoBase.Application\ProyectoBase.Api.Application.csproj" />
+    <ProjectReference Include="..\ProyectoBase.Domain\ProyectoBase.Api.Domain.csproj" />
+    <ProjectReference Include="..\ProyectoBase.Infrastructure\ProyectoBase.Api.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

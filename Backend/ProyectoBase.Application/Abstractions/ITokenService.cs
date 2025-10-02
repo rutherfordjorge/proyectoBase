@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace ProyectoBase.Application.Abstractions;
+namespace ProyectoBase.Api.Application.Abstractions;
 
 /// <summary>
 /// Proporciona funcionalidad para crear tokens JSON Web para usuarios autenticados.

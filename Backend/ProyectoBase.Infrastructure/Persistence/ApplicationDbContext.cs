@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using ProyectoBase.Domain.Entities;
-using ProyectoBase.Infrastructure.Persistence.Configurations;
+using ProyectoBase.Api.Domain.Entities;
+using ProyectoBase.Api.Infrastructure.Persistence.Configurations;
 
-namespace ProyectoBase.Infrastructure.Persistence
+namespace ProyectoBase.Api.Infrastructure.Persistence
 {
     /// <summary>
     /// Representa el contexto de base de datos de Entity Framework Core encargado de administrar

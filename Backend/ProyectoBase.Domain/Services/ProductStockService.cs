@@ -1,11 +1,11 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using ProyectoBase.Domain.Entities;
-using ProyectoBase.Domain.Exceptions;
-using ProyectoBase.Domain.Repositories;
+using ProyectoBase.Api.Domain.Entities;
+using ProyectoBase.Api.Domain.Exceptions;
+using ProyectoBase.Api.Domain.Repositories;
 
-namespace ProyectoBase.Domain.Services
+namespace ProyectoBase.Api.Domain.Services
 {
     /// <summary>
     /// Proporciona operaciones de dominio relacionadas con la disponibilidad de inventario de productos.

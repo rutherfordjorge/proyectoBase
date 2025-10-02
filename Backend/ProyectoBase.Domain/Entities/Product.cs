@@ -1,7 +1,7 @@
 using System;
-using ProyectoBase.Domain.Exceptions;
+using ProyectoBase.Api.Domain.Exceptions;
 
-namespace ProyectoBase.Domain.Entities
+namespace ProyectoBase.Api.Domain.Entities
 {
     /// <summary>
     /// Representa un producto disponible para la venta.

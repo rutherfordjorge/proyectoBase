@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ProyectoBase.Application.DTOs
+namespace ProyectoBase.Api.Application.DTOs
 {
     /// <summary>
     /// Representa la información necesaria para actualizar un producto existente.

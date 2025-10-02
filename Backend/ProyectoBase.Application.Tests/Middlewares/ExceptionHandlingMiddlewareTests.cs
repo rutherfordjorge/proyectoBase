@@ -4,12 +4,12 @@ using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging.Abstractions;
-using ProyectoBase.Api.Middlewares;
-using DomainNotFoundException = ProyectoBase.Domain.Exceptions.NotFoundException;
-using DomainValidationException = ProyectoBase.Domain.Exceptions.ValidationException;
+using ProyectoBase.Api.Api.Middlewares;
+using DomainNotFoundException = ProyectoBase.Api.Domain.Exceptions.NotFoundException;
+using DomainValidationException = ProyectoBase.Api.Domain.Exceptions.ValidationException;
 using Xunit;
 
-namespace ProyectoBase.Application.Tests.Middlewares;
+namespace ProyectoBase.Api.Application.Tests.Middlewares;
 
 public class ExceptionHandlingMiddlewareTests
 {

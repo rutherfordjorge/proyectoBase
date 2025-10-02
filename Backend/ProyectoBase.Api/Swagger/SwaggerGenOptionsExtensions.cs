@@ -7,7 +7,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace ProyectoBase.Api.Swagger;
+namespace ProyectoBase.Api.Api.Swagger;
 
 /// <summary>
 /// Proporciona métodos auxiliares para configurar la generación de Swagger.

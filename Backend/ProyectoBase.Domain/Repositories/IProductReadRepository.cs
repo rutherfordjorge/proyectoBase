@@ -1,9 +1,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using ProyectoBase.Domain.Entities;
+using ProyectoBase.Api.Domain.Entities;
 
-namespace ProyectoBase.Domain.Repositories
+namespace ProyectoBase.Api.Domain.Repositories
 {
     /// <summary>
     /// Proporciona acceso de solo lectura a entidades <see cref="Product"/> desde un almacén de persistencia.

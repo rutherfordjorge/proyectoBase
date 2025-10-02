@@ -1,6 +1,6 @@
 using System;
 
-namespace ProyectoBase.Application.DTOs
+namespace ProyectoBase.Api.Application.DTOs
 {
     /// <summary>
     /// Representa los datos de producto devueltos por los servicios de la aplicación.

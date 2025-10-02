@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ProyectoBase.Infrastructure.Persistence;
+using ProyectoBase.Api.Infrastructure.Persistence;
 
-namespace ProyectoBase.Infrastructure.Persistence.Migrations
+namespace ProyectoBase.Api.Infrastructure.Persistence.Migrations
 {
     /// <summary>
     /// Representa la instantánea del modelo de Entity Framework Core para el contexto de base de datos de la aplicación.
@@ -22,7 +22,7 @@ namespace ProyectoBase.Infrastructure.Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
 
-            modelBuilder.Entity("ProyectoBase.Domain.Entities.Product", builder =>
+            modelBuilder.Entity("ProyectoBase.Api.Domain.Entities.Product", builder =>
             {
                 builder.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");

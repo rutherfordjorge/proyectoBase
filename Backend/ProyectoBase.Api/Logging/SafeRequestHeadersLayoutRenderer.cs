@@ -9,7 +9,7 @@ using NLog;
 using NLog.LayoutRenderers;
 using NLog.Web.LayoutRenderers;
 
-namespace ProyectoBase.Api.Logging;
+namespace ProyectoBase.Api.Api.Logging;
 
 /// <summary>
 /// Representa un layout renderer que emite los encabezados de la solicitud HTTP ocultando los valores sensibles.
