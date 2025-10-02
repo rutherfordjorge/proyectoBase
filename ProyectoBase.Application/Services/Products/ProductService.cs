@@ -34,7 +34,7 @@ public class ProductService : IProductService
     {
         ArgumentNullException.ThrowIfNull(product);
 
-        var entity = new Product(Guid.NewGuid(), product.Name, product.Price, product.Stock, product.Description);
+        var entity = _mapper.Map<Product>(product);
 
         await _productRepository.AddAsync(entity, cancellationToken).ConfigureAwait(false);
 
@@ -53,23 +53,7 @@ public class ProductService : IProductService
             throw new NotFoundException($"The product with id '{product.Id}' was not found.");
         }
 
-        entity.UpdateName(product.Name);
-        entity.UpdateDescription(product.Description);
-        entity.ChangePrice(product.Price);
-
-        if (product.Stock != entity.Stock)
-        {
-            var difference = product.Stock - entity.Stock;
-
-            if (difference > 0)
-            {
-                entity.IncreaseStock(difference);
-            }
-            else
-            {
-                entity.DecreaseStock(Math.Abs(difference));
-            }
-        }
+        _mapper.Map(product, entity);
 
         await _productRepository.UpdateAsync(entity, cancellationToken).ConfigureAwait(false);
 
