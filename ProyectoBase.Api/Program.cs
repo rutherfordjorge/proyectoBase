@@ -3,17 +3,21 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using NLog.Web;
 using ProyectoBase.Api.Middlewares;
 using ProyectoBase.Api.Options;
 using ProyectoBase.Api.Swagger;
 using ProyectoBase.Api.Swagger.Filters;
 using ProyectoBase.Application;
+using ProyectoBase.Application.Options;
 using ProyectoBase.Infrastructure;
 using ProyectoBase.Domain.Entities;
 
@@ -24,6 +28,7 @@ builder.Host.UseNLog();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddAuthorization();
 static IEnumerable<string> GetXmlDocumentationPaths()
 {
     var assemblies = new[]
@@ -100,8 +105,15 @@ builder.Services.AddVersionedApiExplorer(options =>
     options.SubstituteApiVersionInUrl = true;
 });
 
-builder.Services.AddApplication();
-builder.Services.AddInfrastructure(builder.Configuration);
+var jwtSettings = builder.Configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>() ?? new JwtOptions();
+
+if (string.IsNullOrWhiteSpace(jwtSettings.Key))
+{
+    throw new InvalidOperationException("JWT signing key is not configured.");
+}
+
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+    ?? Array.Empty<string>();
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.SectionName));
 builder.Services.Configure<RedisOptions>(builder.Configuration.GetSection(RedisOptions.SectionName));
@@ -112,6 +124,63 @@ builder.Services.PostConfigure<ConnectionStringsOptions>(options =>
         ?? options.DefaultConnection
         ?? string.Empty;
 });
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("DefaultCors", policy =>
+    {
+        if (allowedOrigins.Length == 0)
+        {
+            if (builder.Environment.IsProduction())
+            {
+                throw new InvalidOperationException("Cors:AllowedOrigins configuration is required in production.");
+            }
+
+            policy.AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+            return;
+        }
+
+        policy.WithOrigins(allowedOrigins);
+
+        if (builder.Environment.IsProduction())
+        {
+            policy.WithMethods("GET", "POST", "PUT", "DELETE")
+                .WithHeaders("content-type", "authorization");
+        }
+        else
+        {
+            policy.AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
+        }
+    });
+});
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = true;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings.Issuer,
+        ValidAudience = jwtSettings.Audience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
+        ClockSkew = TimeSpan.Zero,
+    };
+});
+
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
@@ -132,6 +201,13 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
+
+app.UseRouting();
+
+app.UseCors("DefaultCors");
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 

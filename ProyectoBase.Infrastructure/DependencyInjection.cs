@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Registry;
 using ProyectoBase.Application.Abstractions;
+using ProyectoBase.Infrastructure.Authentication;
 using ProyectoBase.Infrastructure.Persistence;
 using ProyectoBase.Infrastructure.Persistence.Repositories;
 
@@ -46,6 +47,7 @@ public static class DependencyInjection
         });
 
         services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddSingleton<ITokenService, TokenService>();
 
         services.AddMemoryCache();
         services.AddDistributedMemoryCache();
