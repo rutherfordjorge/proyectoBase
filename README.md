@@ -129,6 +129,22 @@ curl -k https://localhost:5001/api/products/99999
 El middleware responde con un JSON estandarizado y el error queda registrado en
 la consola o archivo según el entorno, sin exponer credenciales.
 
+#### 🔐 Política de logging seguro
+
+- Las cabeceras HTTP se serializan mediante un layout renderer personalizado que
+  sustituye por `***` cualquier valor asociado a tokens (`Authorization`,
+  `Cookie`, `X-Api-Key`, etc.) o cadenas que contengan contraseñas.
+- Los claims del usuario autenticado solo se registran por tipo y cantidad,
+  evitando exponer identificadores, correos o valores sensibles.
+- Las rutas registradas excluyen el query string para impedir que parámetros con
+  secretos queden en los logs.
+- Los mensajes y propiedades del evento pasan por un filtro regex que enmascara
+  palabras clave comunes como `token`, `password`, `apikey` o `secret`.
+- Las pruebas automatizadas (`SafeRequestHeadersLayoutRendererTests` y
+  `SafeUserClaimsLayoutRendererTests`) actúan como guardias de regresión para
+  asegurar que los cambios futuros no vuelvan a introducir datos sensibles en
+  el logging.
+
 ### 2. Frontend (Angular 14)
 ```bash
 
