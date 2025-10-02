@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoBase.Application.Abstractions;
@@ -73,6 +74,7 @@ public class ProductsController : ControllerBase
     /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
     /// <returns>The representation of the created product.</returns>
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(ProductResponseDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<ProductResponseDto>> CreateProductAsync([FromBody] ProductCreateDto product, CancellationToken cancellationToken)
@@ -91,6 +93,7 @@ public class ProductsController : ControllerBase
     /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
     /// <returns>The representation of the updated product.</returns>
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(ProductResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -115,6 +118,7 @@ public class ProductsController : ControllerBase
     /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
     /// <returns>A response indicating the result of the deletion.</returns>
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

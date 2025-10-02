@@ -60,7 +60,7 @@ del `appsettings.json` por doble guion bajo (`__`). Ejemplos:
 export DOTNET_ConnectionStrings__DefaultConnection="Server=sql;Database=ProyectoBase;User Id=api;Password=${DB_PASSWORD};TrustServerCertificate=True;"
 export DOTNET_Jwt__Issuer="https://api.midominio.com"
 export DOTNET_Jwt__Audience="ProyectoBase.Web"
-export DOTNET_Jwt__Secret="${JWT_SECRET}"
+export DOTNET_Jwt__Key="${JWT_SECRET}"
 export DOTNET_Redis__ConnectionString="redis:6379,abortConnect=false"
 export DOTNET_Redis__InstanceName="ProyectoBase"
 
@@ -70,7 +70,7 @@ dotnet run --project ProyectoBase.Api
 $env:DOTNET_ConnectionStrings__DefaultConnection = "Server=sql;Database=ProyectoBase;User Id=api;Password=$env:DB_PASSWORD;TrustServerCertificate=True;"
 $env:DOTNET_Jwt__Issuer = "https://api.midominio.com"
 $env:DOTNET_Jwt__Audience = "ProyectoBase.Web"
-$env:DOTNET_Jwt__Secret = $env:JWT_SECRET
+$env:DOTNET_Jwt__Key = $env:JWT_SECRET
 $env:DOTNET_Redis__ConnectionString = "redis:6379,abortConnect=false"
 $env:DOTNET_Redis__InstanceName = "ProyectoBase"
 
