@@ -29,7 +29,7 @@ public static class DependencyInjection
 
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-        services.AddAutoMapper(Assembly.GetExecutingAssembly());
+        services.AddAutoMapper(typeof(StartupAssemblyMarker).Assembly);
 
         services.AddScoped<IProductService, ProductService>();
 
