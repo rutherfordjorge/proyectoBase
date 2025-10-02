@@ -18,7 +18,9 @@ ProyectoBase/
 ├── ProyectoBase.Api        # API en ASP.NET Core 8
 │   ├── Controllers         # Endpoints REST (ej: ProductsController)
 │   ├── Program.cs          # Configuración del pipeline
-│   └── appsettings.json    # Configuración (AllowedOrigins para CORS)
+│   ├── appsettings.json              # Configuración común
+│   ├── appsettings.Development.json  # Valores de desarrollo
+│   └── appsettings.Production.json   # Valores de producción
 │
 └── ProyectoBase.Web        # Frontend en Angular 14
     ├── src/app
@@ -43,6 +45,43 @@ Swagger: https://localhost:5001/swagger
 Endpoints: https://localhost:5001/api/products
 
 📌 CORS: se configura en appsettings.json (propiedad AllowedOrigins).
+
+### 🌍 Variables de entorno y configuración
+
+ASP.NET Core permite sobreescribir los archivos `appsettings*.json` mediante
+variables de entorno con el prefijo `DOTNET_`. Esto es especialmente útil en
+despliegues donde las credenciales no pueden vivir en el repositorio.
+
+Los nombres de las variables se construyen reemplazando los dos puntos (`:`)
+del `appsettings.json` por doble guion bajo (`__`). Ejemplos:
+
+```bash
+# Linux/macOS
+export DOTNET_ConnectionStrings__DefaultConnection="Server=sql;Database=ProyectoBase;User Id=api;Password=${DB_PASSWORD};TrustServerCertificate=True;"
+export DOTNET_Jwt__Issuer="https://api.midominio.com"
+export DOTNET_Jwt__Audience="ProyectoBase.Web"
+export DOTNET_Jwt__Secret="${JWT_SECRET}"
+export DOTNET_Redis__ConnectionString="redis:6379,abortConnect=false"
+export DOTNET_Redis__InstanceName="ProyectoBase"
+
+dotnet run --project ProyectoBase.Api
+
+# Windows PowerShell
+$env:DOTNET_ConnectionStrings__DefaultConnection = "Server=sql;Database=ProyectoBase;User Id=api;Password=$env:DB_PASSWORD;TrustServerCertificate=True;"
+$env:DOTNET_Jwt__Issuer = "https://api.midominio.com"
+$env:DOTNET_Jwt__Audience = "ProyectoBase.Web"
+$env:DOTNET_Jwt__Secret = $env:JWT_SECRET
+$env:DOTNET_Redis__ConnectionString = "redis:6379,abortConnect=false"
+$env:DOTNET_Redis__InstanceName = "ProyectoBase"
+
+dotnet run --project ProyectoBase.Api
+```
+
+Si la aplicación se despliega en contenedores (Docker/Kubernetes) o servicios
+gestionados (Azure App Service, AWS Elastic Beanstalk, etc.), basta con definir
+estas mismas variables en el entorno de ejecución para que `Program.cs`
+obtenga los valores en tiempo de arranque sin necesidad de modificarlos en el
+código fuente.
 
 ```
 ### 2. Frontend (Angular 14)
