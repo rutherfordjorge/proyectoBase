@@ -54,6 +54,16 @@ ng serve -o
 La aplicación se abrirá en http://localhost:4200
 ```
 
+### 🗄️ Migraciones de Entity Framework Core
+
+Para generar la migración inicial de la base de datos se debe ejecutar el siguiente comando desde la raíz del repositorio:
+
+```bash
+dotnet ef migrations add InitialCreate --project ProyectoBase.Infrastructure --startup-project ProyectoBase.Api --output-dir Persistence/Migrations
+```
+
+El comando utiliza el proyecto de infraestructura para almacenar las migraciones y el proyecto API como punto de entrada.
+
 🧩 Funcionalidad de ejemplo
 ```bash
 API (ProductsController)
