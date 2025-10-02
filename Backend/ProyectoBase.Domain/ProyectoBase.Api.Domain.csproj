@@ -7,8 +7,9 @@
     <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
     <CopyDocumentationFileToOutputDirectory>Always</CopyDocumentationFileToOutputDirectory>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <AssemblyName>ProyectoBase.Api.Domain</AssemblyName>
+    <RootNamespace>ProyectoBase.Api.Domain</RootNamespace>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.507">
       <PrivateAssets>all</PrivateAssets>

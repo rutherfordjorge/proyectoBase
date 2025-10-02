@@ -1,10 +1,10 @@
 using System;
 using FluentAssertions;
-using ProyectoBase.Domain.Entities;
-using ProyectoBase.Domain.Exceptions;
+using ProyectoBase.Api.Domain.Entities;
+using ProyectoBase.Api.Domain.Exceptions;
 using Xunit;
 
-namespace ProyectoBase.Domain.Tests.Entities;
+namespace ProyectoBase.Api.Domain.Tests.Entities;
 
 public class ProductTests
 {

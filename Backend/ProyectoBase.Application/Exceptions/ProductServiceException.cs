@@ -1,6 +1,6 @@
 using System;
 
-namespace ProyectoBase.Application.Exceptions;
+namespace ProyectoBase.Api.Application.Exceptions;
 
 /// <summary>
 /// Representa errores inesperados que se producen al operar con productos en la capa de aplicación.

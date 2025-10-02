@@ -6,10 +6,10 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using ProyectoBase.Application.Abstractions;
-using ProyectoBase.Application.Options;
+using ProyectoBase.Api.Application.Abstractions;
+using ProyectoBase.Api.Application.Options;
 
-namespace ProyectoBase.Infrastructure.Authentication;
+namespace ProyectoBase.Api.Infrastructure.Authentication;
 
 /// <summary>
 /// Proporciona utilidades para generar tokens JSON Web para usuarios autenticados.

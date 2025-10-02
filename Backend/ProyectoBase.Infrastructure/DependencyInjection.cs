@@ -5,12 +5,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Registry;
-using ProyectoBase.Application.Abstractions;
-using ProyectoBase.Infrastructure.Authentication;
-using ProyectoBase.Infrastructure.Persistence;
-using ProyectoBase.Infrastructure.Persistence.Repositories;
+using ProyectoBase.Api.Application.Abstractions;
+using ProyectoBase.Api.Infrastructure.Authentication;
+using ProyectoBase.Api.Infrastructure.Persistence;
+using ProyectoBase.Api.Infrastructure.Persistence.Repositories;
 
-namespace ProyectoBase.Infrastructure;
+namespace ProyectoBase.Api.Infrastructure;
 
 /// <summary>
 /// Proporciona métodos de extensión para registrar los servicios y dependencias de la infraestructura.

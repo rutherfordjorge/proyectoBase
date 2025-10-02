@@ -7,9 +7,9 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ProyectoBase.Api;
-using ProyectoBase.Domain.Entities;
-using ProyectoBase.Infrastructure.Persistence;
+using ProyectoBase.Api.Api;
+using ProyectoBase.Api.Domain.Entities;
+using ProyectoBase.Api.Infrastructure.Persistence;
 
 namespace ProyectoBase.Api.IntegrationTests.Infrastructure;
 

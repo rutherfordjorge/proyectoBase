@@ -1,4 +1,4 @@
-namespace ProyectoBase.Domain.Exceptions
+namespace ProyectoBase.Api.Domain.Exceptions
 {
     /// <summary>
     /// Representa errores que ocurren cuando no se encuentra un recurso solicitado en el dominio.

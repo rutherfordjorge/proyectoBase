@@ -1,4 +1,4 @@
-namespace ProyectoBase.Domain;
+namespace ProyectoBase.Api.Domain;
 
 public record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {

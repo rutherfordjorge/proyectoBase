@@ -1,10 +1,10 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using ProyectoBase.Application.Abstractions;
-using ProyectoBase.Application.DTOs;
+using ProyectoBase.Api.Application.Abstractions;
+using ProyectoBase.Api.Application.DTOs;
 
-namespace ProyectoBase.Application.Services.Products
+namespace ProyectoBase.Api.Application.Services.Products
 {
     /// <summary>
     /// Atiende solicitudes de <see cref="CreateProductCommand"/> delegando en el servicio de productos.

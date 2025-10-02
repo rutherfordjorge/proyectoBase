@@ -1,7 +1,7 @@
 using FluentValidation;
-using ProyectoBase.Application.DTOs;
+using ProyectoBase.Api.Application.DTOs;
 
-namespace ProyectoBase.Application.Validators
+namespace ProyectoBase.Api.Application.Validators
 {
     /// <summary>
     /// Garantiza que las instancias de <see cref="ProductUpdateDto"/> contengan datos válidos antes de ser procesadas.

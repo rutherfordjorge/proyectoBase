@@ -7,7 +7,7 @@ using NLog;
 using NLog.LayoutRenderers;
 using NLog.Web.LayoutRenderers;
 
-namespace ProyectoBase.Api.Logging;
+namespace ProyectoBase.Api.Api.Logging;
 
 /// <summary>
 /// Representa un layout renderer que expone los claims del usuario autenticado sin revelar información personal.

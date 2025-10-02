@@ -1,4 +1,4 @@
-namespace ProyectoBase.Domain.Exceptions
+namespace ProyectoBase.Api.Domain.Exceptions
 {
     /// <summary>
     /// Representa errores que ocurren cuando el dominio detecta datos no válidos.

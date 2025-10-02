@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ProyectoBase.Domain.Entities;
+using ProyectoBase.Api.Domain.Entities;
 
-namespace ProyectoBase.Application.Abstractions
+namespace ProyectoBase.Api.Application.Abstractions
 {
     /// <summary>
     /// Proporciona operaciones de acceso a datos para entidades <see cref="Product"/>.

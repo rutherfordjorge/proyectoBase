@@ -9,11 +9,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ProyectoBase.Application.Abstractions;
-using ProyectoBase.Application.DTOs;
-using ProyectoBase.Domain.Exceptions;
+using ProyectoBase.Api.Application.Abstractions;
+using ProyectoBase.Api.Application.DTOs;
+using ProyectoBase.Api.Domain.Exceptions;
 
-namespace ProyectoBase.Api.Controllers.V1;
+namespace ProyectoBase.Api.Api.Controllers.V1;
 
 /// <summary>
 /// Expone endpoints para administrar recursos de productos.

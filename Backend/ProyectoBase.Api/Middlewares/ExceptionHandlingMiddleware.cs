@@ -4,9 +4,9 @@ using System.Linq;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using ProyectoBase.Domain.Exceptions;
+using ProyectoBase.Api.Domain.Exceptions;
 
-namespace ProyectoBase.Api.Middlewares;
+namespace ProyectoBase.Api.Api.Middlewares;
 
 /// <summary>
 /// Middleware responsable de traducir las excepciones no controladas en respuestas HTTP estandarizadas.

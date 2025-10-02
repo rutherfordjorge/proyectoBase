@@ -1,4 +1,4 @@
-namespace ProyectoBase.Api.Swagger;
+namespace ProyectoBase.Api.Api.Swagger;
 
 /// <summary>
 /// Representa el contrato de error estandarizado que devuelve la API.

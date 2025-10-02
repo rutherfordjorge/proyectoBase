@@ -1,9 +1,9 @@
 using System;
 using AutoMapper;
-using ProyectoBase.Application.DTOs;
-using ProyectoBase.Domain.Entities;
+using ProyectoBase.Api.Application.DTOs;
+using ProyectoBase.Api.Domain.Entities;
 
-namespace ProyectoBase.Application.Mappings;
+namespace ProyectoBase.Api.Application.Mappings;
 
 /// <summary>
 /// Define los mapeos entre las entidades de dominio de productos y sus DTO.

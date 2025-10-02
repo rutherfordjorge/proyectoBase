@@ -2,10 +2,10 @@ using System;
 using System.Globalization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.OpenApi.Models;
-using ProyectoBase.Api.Swagger;
+using ProyectoBase.Api.Api.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace ProyectoBase.Api.Swagger.Filters;
+namespace ProyectoBase.Api.Api.Swagger.Filters;
 
 /// <summary>
 /// Garantiza que las respuestas de error predeterminadas queden documentadas para todas las operaciones.

@@ -1,9 +1,9 @@
 using FluentValidation.TestHelper;
-using ProyectoBase.Application.DTOs;
-using ProyectoBase.Application.Validators;
+using ProyectoBase.Api.Application.DTOs;
+using ProyectoBase.Api.Application.Validators;
 using Xunit;
 
-namespace ProyectoBase.Application.Tests.Validators;
+namespace ProyectoBase.Api.Application.Tests.Validators;
 
 /// <summary>
 /// Contains unit tests for <see cref="UpdateProductDtoValidator"/>.

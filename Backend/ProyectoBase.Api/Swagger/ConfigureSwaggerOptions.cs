@@ -3,7 +3,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace ProyectoBase.Api.Swagger;
+namespace ProyectoBase.Api.Api.Swagger;
 
 /// <summary>
 /// Configura los documentos de Swagger según las versiones disponibles de la API.

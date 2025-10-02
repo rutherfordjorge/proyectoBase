@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
-using ProyectoBase.Application.Abstractions;
-using ProyectoBase.Application.DTOs;
-using ProyectoBase.Application.Exceptions;
-using ProyectoBase.Domain.Entities;
-using ProyectoBase.Domain.Exceptions;
+using ProyectoBase.Api.Application.Abstractions;
+using ProyectoBase.Api.Application.DTOs;
+using ProyectoBase.Api.Application.Exceptions;
+using ProyectoBase.Api.Domain.Entities;
+using ProyectoBase.Api.Domain.Exceptions;
 
-namespace ProyectoBase.Application.Services.Products;
+namespace ProyectoBase.Api.Application.Services.Products;
 
 /// <summary>
 /// Proporciona operaciones de nivel de aplicación para administrar productos.

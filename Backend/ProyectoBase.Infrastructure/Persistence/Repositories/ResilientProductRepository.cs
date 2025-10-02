@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Polly;
-using ProyectoBase.Application.Abstractions;
-using ProyectoBase.Domain.Entities;
+using ProyectoBase.Api.Application.Abstractions;
+using ProyectoBase.Api.Domain.Entities;
 
-namespace ProyectoBase.Infrastructure.Persistence.Repositories;
+namespace ProyectoBase.Api.Infrastructure.Persistence.Repositories;
 
 /// <summary>
 /// Decora una instancia de <see cref="IProductRepository"/> con políticas de resiliencia proporcionadas por Polly.

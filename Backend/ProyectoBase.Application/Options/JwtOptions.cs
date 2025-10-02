@@ -1,4 +1,4 @@
-namespace ProyectoBase.Application.Options;
+namespace ProyectoBase.Api.Application.Options;
 
 /// <summary>
 /// Representa la configuración necesaria para generar y validar tokens JWT.

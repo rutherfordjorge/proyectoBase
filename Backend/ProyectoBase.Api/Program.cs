@@ -12,14 +12,14 @@ using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using NLog.Web;
-using ProyectoBase.Api.Middlewares;
-using ProyectoBase.Api.Options;
-using ProyectoBase.Api.Swagger;
-using ProyectoBase.Api.Swagger.Filters;
-using ProyectoBase.Application;
-using ProyectoBase.Application.Options;
-using ProyectoBase.Infrastructure;
-using ProyectoBase.Domain.Entities;
+using ProyectoBase.Api.Api.Middlewares;
+using ProyectoBase.Api.Api.Options;
+using ProyectoBase.Api.Api.Swagger;
+using ProyectoBase.Api.Api.Swagger.Filters;
+using ProyectoBase.Api.Application;
+using ProyectoBase.Api.Application.Options;
+using ProyectoBase.Api.Infrastructure;
+using ProyectoBase.Api.Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,9 +34,9 @@ static IEnumerable<string> GetXmlDocumentationPaths()
     var assemblies = new[]
     {
         typeof(Program).Assembly,
-        typeof(ProyectoBase.Application.DependencyInjection).Assembly,
+        typeof(ProyectoBase.Api.Application.DependencyInjection).Assembly,
         typeof(Product).Assembly,
-        typeof(ProyectoBase.Infrastructure.DependencyInjection).Assembly,
+        typeof(ProyectoBase.Api.Infrastructure.DependencyInjection).Assembly,
     };
 
     return assemblies
@@ -58,8 +58,8 @@ builder.Services.AddSwaggerGen(options =>
     options.MapCodeEnumsFromAssemblies(
         typeof(Program).Assembly,
         typeof(Product).Assembly,
-        typeof(ProyectoBase.Application.DependencyInjection).Assembly,
-        typeof(ProyectoBase.Infrastructure.DependencyInjection).Assembly);
+        typeof(ProyectoBase.Api.Application.DependencyInjection).Assembly,
+        typeof(ProyectoBase.Api.Infrastructure.DependencyInjection).Assembly);
 
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
