@@ -17,4 +17,7 @@
     <ProjectReference Include="..\ProyectoBase.Application\ProyectoBase.Application.csproj" />
     <ProjectReference Include="..\ProyectoBase.Domain\ProyectoBase.Domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Persistence\Migrations\**\*.cs" />
+  </ItemGroup>
 </Project>
