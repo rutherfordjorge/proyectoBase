@@ -181,6 +181,20 @@ Node.js 16/18 → Descargar aquí https://nodejs.org/en/
 
 Angular CLI 14 → instalar con: npm install -g @angular/cli@14
 ```
+
+### 🧪 Pruebas automatizadas
+
+Ejecuta toda la suite (unitarias y de integración) desde la raíz del repositorio:
+
+```bash
+dotnet test ProyectoBase.sln
+```
+
+Este comando incluye:
+
+- `ProyectoBase.Domain.Tests`: pruebas de dominio con **FluentAssertions** y mocks de repositorios utilizando **Moq**.
+- `ProyectoBase.Api.IntegrationTests`: pruebas de integración que levantan la API mediante `WebApplicationFactory<Program>` y una base de datos SQLite en memoria.
+
 📌 Próximos pasos
 ```
 Integrar base de datos (EF Core o Dapper).
