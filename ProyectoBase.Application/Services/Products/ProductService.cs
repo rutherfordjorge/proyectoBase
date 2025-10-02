@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.Extensions.Caching.Distributed;
 using ProyectoBase.Application.Abstractions;
 using ProyectoBase.Application.DTOs;
 using ProyectoBase.Domain.Entities;
@@ -15,18 +17,25 @@ namespace ProyectoBase.Application.Services.Products;
 /// </summary>
 public class ProductService : IProductService
 {
+    private const string AllProductsCacheKey = "products:all";
+
+    private static readonly JsonSerializerOptions CacheSerializerOptions = new(JsonSerializerDefaults.Web);
+
     private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
+    private readonly IDistributedCache _cache;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ProductService"/> class.
     /// </summary>
     /// <param name="productRepository">The repository used to persist products.</param>
     /// <param name="mapper">The mapper used to project entities into DTOs.</param>
-    public ProductService(IProductRepository productRepository, IMapper mapper)
+    /// <param name="cache">The distributed cache used to store product collections.</param>
+    public ProductService(IProductRepository productRepository, IMapper mapper, IDistributedCache cache)
     {
-        _productRepository = productRepository;
-        _mapper = mapper;
+        _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
+        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        _cache = cache ?? throw new ArgumentNullException(nameof(cache));
     }
 
     /// <inheritdoc />
@@ -37,6 +46,7 @@ public class ProductService : IProductService
         var entity = _mapper.Map<Product>(product);
 
         await _productRepository.AddAsync(entity, cancellationToken).ConfigureAwait(false);
+        await _cache.RemoveAsync(AllProductsCacheKey, cancellationToken).ConfigureAwait(false);
 
         return _mapper.Map<ProductResponseDto>(entity);
     }
@@ -56,6 +66,7 @@ public class ProductService : IProductService
         _mapper.Map(product, entity);
 
         await _productRepository.UpdateAsync(entity, cancellationToken).ConfigureAwait(false);
+        await _cache.RemoveAsync(AllProductsCacheKey, cancellationToken).ConfigureAwait(false);
 
         return _mapper.Map<ProductResponseDto>(entity);
     }
@@ -71,9 +82,36 @@ public class ProductService : IProductService
     /// <inheritdoc />
     public async Task<IReadOnlyCollection<ProductResponseDto>> GetAllAsync(CancellationToken cancellationToken = default)
     {
+        var cachedProducts = await _cache.GetAsync(AllProductsCacheKey, cancellationToken).ConfigureAwait(false);
+
+        if (cachedProducts is not null)
+        {
+            var cachedCollection = JsonSerializer.Deserialize<List<ProductResponseDto>>(cachedProducts, CacheSerializerOptions);
+
+            if (cachedCollection is not null && cachedCollection.Count > 0)
+            {
+                return cachedCollection.AsReadOnly();
+            }
+
+            if (cachedCollection is not null)
+            {
+                return Array.Empty<ProductResponseDto>();
+            }
+        }
+
         var products = await _productRepository.GetAllAsync(cancellationToken).ConfigureAwait(false);
 
         var mapped = _mapper.Map<List<ProductResponseDto>>(products);
+        var cacheEntryOptions = new DistributedCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5),
+        };
+
+        await _cache.SetAsync(
+            AllProductsCacheKey,
+            JsonSerializer.SerializeToUtf8Bytes(mapped, CacheSerializerOptions),
+            cacheEntryOptions,
+            cancellationToken).ConfigureAwait(false);
 
         return mapped.Count == 0
             ? Array.Empty<ProductResponseDto>()
@@ -81,8 +119,9 @@ public class ProductService : IProductService
     }
 
     /// <inheritdoc />
-    public Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return _productRepository.DeleteAsync(id, cancellationToken);
+        await _productRepository.DeleteAsync(id, cancellationToken).ConfigureAwait(false);
+        await _cache.RemoveAsync(AllProductsCacheKey, cancellationToken).ConfigureAwait(false);
     }
 }
