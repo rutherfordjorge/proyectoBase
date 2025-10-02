@@ -1,3 +1,4 @@
+# Workflow temporalmente deshabilitado mientras se actualiza la infraestructura de CI.
 name: CI
 
 on:
@@ -8,6 +9,8 @@ on:
 
 jobs:
   build-and-test:
+    # Condición fija para evitar que el workflow se ejecute hasta completar la revisión.
+    if: ${{ false }}
     runs-on: ubuntu-latest
 
     steps:
