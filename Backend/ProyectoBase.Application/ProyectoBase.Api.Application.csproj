@@ -18,7 +18,7 @@
     <PackageReference Include="MediatR" Version="12.1.1" />
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="AutoMapper.Extensions.DependencyInjection" Version="13.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.8" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.507">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
