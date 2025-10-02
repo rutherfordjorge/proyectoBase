@@ -1,9 +1,13 @@
+using NLog.Web;
 using ProyectoBase.Api.Middlewares;
 using ProyectoBase.Api.Options;
 using ProyectoBase.Application;
 using ProyectoBase.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.ClearProviders();
+builder.Host.UseNLog();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

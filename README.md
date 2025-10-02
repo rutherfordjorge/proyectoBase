@@ -83,7 +83,52 @@ estas mismas variables en el entorno de ejecución para que `Program.cs`
 obtenga los valores en tiempo de arranque sin necesidad de modificarlos en el
 código fuente.
 
+### 📝 Logging con NLog
+
+La API reemplaza el proveedor por defecto de ASP.NET Core y utiliza **NLog**
+(`nlog.config` en `ProyectoBase.Api`) para centralizar los logs. Cada entorno
+tiene un destino distinto:
+
+- `Development`: salida estructurada en consola.
+- `Staging`: consola + archivo.
+- `Production`: solo archivo (`logs/<fecha>.log` por defecto).
+
+Todos los mensajes pasan por un layout que anonimiza tokens, contraseñas y
+valores sensibles detectados en mensajes, propiedades de log y cabeceras HTTP.
+
+#### 🔧 Sobrescribir configuración de NLog por variables de entorno
+
+Las variables declaradas en `nlog.config` permiten ajustar la configuración sin
+editar archivos:
+
+```bash
+# Cambiar el nivel mínimo de log
+export NLOG_MINLEVEL=Debug
+
+# Redefinir el directorio de logs
+export NLOG_LOG_DIRECTORY=/var/log/proyecto-base
+
+dotnet run --project ProyectoBase.Api
 ```
+
+Al iniciar la API, NLog leerá estas variables y adaptará los destinos de salida
+con la configuración indicada.
+
+#### ✅ Verificar logs de excepciones
+
+El `ExceptionHandlingMiddleware` se mantiene al inicio del pipeline, por lo que
+cualquier excepción no controlada termina en NLog con el formato anterior.
+
+```bash
+dotnet run --project ProyectoBase.Api
+
+# En otra terminal generar un 404 para revisar el log estructurado
+curl -k https://localhost:5001/api/products/99999
+```
+
+El middleware responde con un JSON estandarizado y el error queda registrado en
+la consola o archivo según el entorno, sin exponer credenciales.
+
 ### 2. Frontend (Angular 14)
 ```bash
 
