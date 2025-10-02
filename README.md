@@ -182,6 +182,19 @@ Node.js 16/18 → Descargar aquí https://nodejs.org/en/
 Angular CLI 14 → instalar con: npm install -g @angular/cli@14
 ```
 
+### 🧹 Estilo y análisis de código
+
+- El archivo `.editorconfig` en la raíz define las reglas de formato (espacios en lugar de tabuladores, finales de línea `LF`, orden de `using`, etc.) y marca como error la falta de comentarios XML en el código productivo.
+- Todos los proyectos .NET referencian `StyleCop.Analyzers` y habilitan `<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>`, por lo que los avisos de estilo rompen la compilación si no se corrigen.
+- Los proyectos de pruebas incluyen supresiones justificadas en `GlobalSuppressions.cs` para evitar la documentación XML obligatoria en pruebas unitarias o de integración, manteniendo el foco en la legibilidad de los escenarios.
+- Para aplicar correcciones automáticas ejecuta:
+
+```bash
+dotnet format ProyectoBase.sln
+```
+
+Agrega la opción `--verify-no-changes` en CI para validar que el código enviado respeta el formato establecido.
+
 ### 🧪 Pruebas automatizadas
 
 Ejecuta toda la suite (unitarias y de integración) desde la raíz del repositorio:
