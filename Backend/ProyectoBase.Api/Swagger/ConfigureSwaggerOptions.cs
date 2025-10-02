@@ -6,16 +6,16 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 namespace ProyectoBase.Api.Swagger;
 
 /// <summary>
-/// Configures Swagger documents based on the available API versions.
+/// Configura los documentos de Swagger según las versiones disponibles de la API.
 /// </summary>
 public sealed class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
 {
     private readonly IApiVersionDescriptionProvider _provider;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ConfigureSwaggerOptions"/> class.
+    /// Inicializa una nueva instancia de la clase <see cref="ConfigureSwaggerOptions"/>.
     /// </summary>
-    /// <param name="provider">The API version description provider.</param>
+    /// <param name="provider">El proveedor de descripciones de versiones de la API.</param>
     public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider)
     {
         _provider = provider;
@@ -35,14 +35,14 @@ public sealed class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOption
     {
         var info = new OpenApiInfo
         {
-            Title = "ProyectoBase API",
+            Title = "API de ProyectoBase",
             Version = description.ApiVersion.ToString(),
-            Description = "API documentation for ProyectoBase.",
+            Description = "Documentación de la API de ProyectoBase.",
         };
 
         if (description.IsDeprecated)
         {
-            info.Description += " This API version has been deprecated.";
+            info.Description += " Esta versión de la API se encuentra obsoleta.";
         }
 
         return info;

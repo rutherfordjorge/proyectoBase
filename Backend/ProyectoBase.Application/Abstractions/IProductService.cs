@@ -7,47 +7,47 @@ using ProyectoBase.Application.DTOs;
 namespace ProyectoBase.Application.Abstractions
 {
     /// <summary>
-    /// Defines the operations available to manage products within the application layer.
+    /// Define las operaciones disponibles para administrar productos dentro de la capa de aplicación.
     /// </summary>
     public interface IProductService
     {
         /// <summary>
-        /// Creates a new product from the provided information.
+        /// Crea un nuevo producto a partir de la información proporcionada.
         /// </summary>
-        /// <param name="product">The data describing the product to create.</param>
-        /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
-        /// <returns>The representation of the created product.</returns>
+        /// <param name="product">Los datos que describen el producto a crear.</param>
+        /// <param name="cancellationToken">Token para cancelar la operación asincrónica.</param>
+        /// <returns>La representación del producto creado.</returns>
         Task<ProductResponseDto> CreateAsync(ProductCreateDto product, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Updates an existing product using the supplied information.
+        /// Actualiza un producto existente utilizando la información suministrada.
         /// </summary>
-        /// <param name="product">The data describing the product to update.</param>
-        /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
-        /// <returns>The representation of the updated product.</returns>
+        /// <param name="product">Los datos que describen el producto a actualizar.</param>
+        /// <param name="cancellationToken">Token para cancelar la operación asincrónica.</param>
+        /// <returns>La representación del producto actualizado.</returns>
         Task<ProductResponseDto> UpdateAsync(ProductUpdateDto product, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Retrieves a product by its unique identifier.
+        /// Recupera un producto por su identificador único.
         /// </summary>
-        /// <param name="id">The identifier of the product to retrieve.</param>
-        /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
-        /// <returns>The requested product representation, if it exists.</returns>
+        /// <param name="id">El identificador del producto que se desea obtener.</param>
+        /// <param name="cancellationToken">Token para cancelar la operación asincrónica.</param>
+        /// <returns>La representación del producto solicitado, si existe.</returns>
         Task<ProductResponseDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Retrieves all products available in the application context.
+        /// Recupera todos los productos disponibles en el contexto de la aplicación.
         /// </summary>
-        /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
-        /// <returns>A collection containing the available product representations.</returns>
+        /// <param name="cancellationToken">Token para cancelar la operación asincrónica.</param>
+        /// <returns>Una colección que contiene las representaciones de los productos disponibles.</returns>
         Task<IReadOnlyCollection<ProductResponseDto>> GetAllAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Removes the product that matches the provided identifier.
+        /// Elimina el producto que coincide con el identificador proporcionado.
         /// </summary>
-        /// <param name="id">The identifier of the product to remove.</param>
-        /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
-        /// <returns>A task representing the asynchronous operation.</returns>
+        /// <param name="id">El identificador del producto que se eliminará.</param>
+        /// <param name="cancellationToken">Token para cancelar la operación asincrónica.</param>
+        /// <returns>Una tarea que representa la operación asincrónica.</returns>
         Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
     }
 }

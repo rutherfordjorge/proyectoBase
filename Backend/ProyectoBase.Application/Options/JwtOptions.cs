@@ -1,37 +1,37 @@
 namespace ProyectoBase.Application.Options;
 
 /// <summary>
-/// Represents configuration settings for JWT token generation and validation.
+/// Representa la configuración necesaria para generar y validar tokens JWT.
 /// </summary>
 public class JwtOptions
 {
     /// <summary>
-    /// The configuration section name for JWT settings.
+    /// Nombre de la sección de configuración que contiene los valores de JWT.
     /// </summary>
     public const string SectionName = "Jwt";
 
     /// <summary>
-    /// Gets or sets the token issuer.
+    /// Obtiene o establece el emisor del token.
     /// </summary>
     public string Issuer { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets the expected token audience.
+    /// Obtiene o establece la audiencia esperada del token.
     /// </summary>
     public string Audience { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets the symmetric signing key used to sign tokens.
+    /// Obtiene o establece la clave simétrica utilizada para firmar los tokens.
     /// </summary>
     public string Key { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets the access token expiration time in minutes.
+    /// Obtiene o establece el tiempo de expiración del token de acceso en minutos.
     /// </summary>
     public int AccessTokenExpirationMinutes { get; set; } = 60;
 
     /// <summary>
-    /// Gets or sets the refresh token expiration time in days.
+    /// Obtiene o establece el tiempo de expiración del token de actualización en días.
     /// </summary>
     public int RefreshTokenExpirationDays { get; set; } = 7;
 }

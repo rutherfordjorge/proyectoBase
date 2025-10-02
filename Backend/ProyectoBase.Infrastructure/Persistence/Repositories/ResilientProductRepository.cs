@@ -9,7 +9,7 @@ using ProyectoBase.Domain.Entities;
 namespace ProyectoBase.Infrastructure.Persistence.Repositories;
 
 /// <summary>
-/// Decorates an <see cref="IProductRepository"/> instance with resilience policies provided by Polly.
+/// Decora una instancia de <see cref="IProductRepository"/> con políticas de resiliencia proporcionadas por Polly.
 /// </summary>
 public class ResilientProductRepository : IProductRepository
 {
@@ -18,11 +18,11 @@ public class ResilientProductRepository : IProductRepository
     private readonly IAsyncPolicy _getPolicy;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ResilientProductRepository"/> class.
+    /// Inicializa una nueva instancia de la clase <see cref="ResilientProductRepository"/>.
     /// </summary>
-    /// <param name="innerRepository">The repository to decorate.</param>
-    /// <param name="writePolicy">The policy that should be applied to write operations.</param>
-    /// <param name="getPolicy">The policy that should be applied to read operations.</param>
+    /// <param name="innerRepository">El repositorio que se decorará.</param>
+    /// <param name="writePolicy">La política que se aplicará a las operaciones de escritura.</param>
+    /// <param name="getPolicy">La política que se aplicará a las operaciones de lectura.</param>
     public ResilientProductRepository(
         IProductRepository innerRepository,
         IAsyncPolicy writePolicy,

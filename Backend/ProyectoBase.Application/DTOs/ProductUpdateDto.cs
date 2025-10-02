@@ -4,14 +4,14 @@ using System.ComponentModel.DataAnnotations;
 namespace ProyectoBase.Application.DTOs
 {
     /// <summary>
-    /// Represents the information required to update an existing product.
+    /// Representa la información necesaria para actualizar un producto existente.
     /// </summary>
     public class ProductUpdateDto : ProductCreateDto
     {
         /// <summary>
-        /// Gets or sets the unique identifier of the product to update.
+        /// Obtiene o establece el identificador único del producto que se desea actualizar.
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "El identificador del producto es obligatorio.")]
         public Guid Id { get; set; }
     }
 }

@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProyectoBase.Infrastructure.Persistence.Migrations
 {
     /// <summary>
-    /// Defines the initial database schema for the application including the Products table.
+    /// Define el esquema inicial de la base de datos para la aplicación, incluida la tabla de productos.
     /// </summary>
     public partial class InitialCreate : Migration
     {
         /// <summary>
-        /// Builds the database objects required for the initial release of the application.
+        /// Crea los objetos de base de datos necesarios para la primera versión de la aplicación.
         /// </summary>
-        /// <param name="migrationBuilder">The builder used to construct the database schema.</param>
+        /// <param name="migrationBuilder">El generador utilizado para construir el esquema de la base de datos.</param>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -31,9 +31,9 @@ namespace ProyectoBase.Infrastructure.Persistence.Migrations
         }
 
         /// <summary>
-        /// Removes the database objects created in the <see cref="Up(MigrationBuilder)"/> method.
+        /// Elimina los objetos de base de datos creados en el método <see cref="Up(MigrationBuilder)"/>.
         /// </summary>
-        /// <param name="migrationBuilder">The builder used to drop the database schema.</param>
+        /// <param name="migrationBuilder">El generador utilizado para eliminar el esquema de la base de datos.</param>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

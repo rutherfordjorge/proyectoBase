@@ -11,7 +11,7 @@ using ProyectoBase.Application.DTOs;
 namespace ProyectoBase.Api.Controllers.V1;
 
 /// <summary>
-/// Exposes endpoints to manage products resources.
+/// Expone endpoints para administrar recursos de productos.
 /// </summary>
 [ApiController]
 [ApiVersion("1.0")]
@@ -22,19 +22,19 @@ public class ProductsController : ControllerBase
     private readonly IProductService _productService;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ProductsController"/> class.
+    /// Inicializa una nueva instancia de la clase <see cref="ProductsController"/>.
     /// </summary>
-    /// <param name="productService">The service responsible for product operations.</param>
+    /// <param name="productService">El servicio responsable de las operaciones de productos.</param>
     public ProductsController(IProductService productService)
     {
         _productService = productService;
     }
 
     /// <summary>
-    /// Retrieves the complete list of available products.
+    /// Recupera la lista completa de productos disponibles.
     /// </summary>
-    /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
-    /// <returns>A collection containing the requested products.</returns>
+    /// <param name="cancellationToken">Token para cancelar la operación asincrónica.</param>
+    /// <returns>Una colección con los productos solicitados.</returns>
     [HttpGet]
     [ProducesResponseType(typeof(IReadOnlyCollection<ProductResponseDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -46,11 +46,11 @@ public class ProductsController : ControllerBase
     }
 
     /// <summary>
-    /// Retrieves a specific product by its unique identifier.
+    /// Recupera un producto específico por su identificador único.
     /// </summary>
-    /// <param name="id">The identifier of the product to retrieve.</param>
-    /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
-    /// <returns>The product that matches the provided identifier.</returns>
+    /// <param name="id">El identificador del producto que se desea obtener.</param>
+    /// <param name="cancellationToken">Token para cancelar la operación asincrónica.</param>
+    /// <returns>El producto que coincide con el identificador proporcionado.</returns>
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(ProductResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -68,11 +68,11 @@ public class ProductsController : ControllerBase
     }
 
     /// <summary>
-    /// Creates a new product using the provided information.
+    /// Crea un nuevo producto con la información proporcionada.
     /// </summary>
-    /// <param name="product">The product information.</param>
-    /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
-    /// <returns>The representation of the created product.</returns>
+    /// <param name="product">La información del producto.</param>
+    /// <param name="cancellationToken">Token para cancelar la operación asincrónica.</param>
+    /// <returns>La representación del producto creado.</returns>
     [HttpPost]
     [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(ProductResponseDto), StatusCodes.Status201Created)]
@@ -86,12 +86,12 @@ public class ProductsController : ControllerBase
     }
 
     /// <summary>
-    /// Updates the product that matches the provided identifier.
+    /// Actualiza el producto que coincide con el identificador proporcionado.
     /// </summary>
-    /// <param name="id">The identifier of the product to update.</param>
-    /// <param name="product">The product data to apply.</param>
-    /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
-    /// <returns>The representation of the updated product.</returns>
+    /// <param name="id">El identificador del producto que se desea actualizar.</param>
+    /// <param name="product">Los datos del producto que se aplicarán.</param>
+    /// <param name="cancellationToken">Token para cancelar la operación asincrónica.</param>
+    /// <returns>La representación del producto actualizado.</returns>
     [HttpPut("{id:guid}")]
     [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(ProductResponseDto), StatusCodes.Status200OK)]
@@ -101,7 +101,7 @@ public class ProductsController : ControllerBase
     {
         if (product.Id != Guid.Empty && product.Id != id)
         {
-            return BadRequest("The provided identifier does not match the route value.");
+            return BadRequest("El identificador proporcionado no coincide con el valor de la ruta.");
         }
 
         product.Id = id;
@@ -112,11 +112,11 @@ public class ProductsController : ControllerBase
     }
 
     /// <summary>
-    /// Deletes the product that matches the provided identifier.
+    /// Elimina el producto que coincide con el identificador proporcionado.
     /// </summary>
-    /// <param name="id">The identifier of the product to delete.</param>
-    /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
-    /// <returns>A response indicating the result of the deletion.</returns>
+    /// <param name="id">El identificador del producto que se eliminará.</param>
+    /// <param name="cancellationToken">Token para cancelar la operación asincrónica.</param>
+    /// <returns>Una respuesta que indica el resultado de la eliminación.</returns>
     [HttpDelete("{id:guid}")]
     [Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

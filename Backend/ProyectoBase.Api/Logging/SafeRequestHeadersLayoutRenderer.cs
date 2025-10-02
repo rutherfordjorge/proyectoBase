@@ -12,7 +12,7 @@ using NLog.Web.LayoutRenderers;
 namespace ProyectoBase.Api.Logging;
 
 /// <summary>
-/// Layout renderer that outputs HTTP request headers while masking sensitive values.
+/// Representa un layout renderer que emite los encabezados de la solicitud HTTP ocultando los valores sensibles.
 /// </summary>
 [LayoutRenderer("safe-request-headers")]
 public sealed class SafeRequestHeadersLayoutRenderer : AspNetLayoutRendererBase
@@ -39,10 +39,10 @@ public sealed class SafeRequestHeadersLayoutRenderer : AspNetLayoutRendererBase
     };
 
     /// <summary>
-    /// Appends the sanitized headers to the log builder.
+    /// Agrega los encabezados saneados al generador del registro.
     /// </summary>
-    /// <param name="builder">The builder receiving the rendered output.</param>
-    /// <param name="logEvent">The log event being processed.</param>
+    /// <param name="builder">El generador que recibe la salida renderizada.</param>
+    /// <param name="logEvent">El evento de registro que se está procesando.</param>
     protected override void DoAppend(StringBuilder builder, LogEventInfo logEvent)
     {
         var sanitized = SanitizeHeaders(HttpContextAccessor?.HttpContext);
@@ -55,10 +55,10 @@ public sealed class SafeRequestHeadersLayoutRenderer : AspNetLayoutRendererBase
     }
 
     /// <summary>
-    /// Produces a sanitized snapshot of the headers contained in the provided HTTP context.
+    /// Produce una instantánea saneada de los encabezados presentes en el contexto HTTP suministrado.
     /// </summary>
-    /// <param name="httpContext">The current HTTP context.</param>
-    /// <returns>A dictionary with sensitive information masked.</returns>
+    /// <param name="httpContext">El contexto HTTP actual.</param>
+    /// <returns>Un diccionario con la información sensible enmascarada.</returns>
     internal static IReadOnlyDictionary<string, string> SanitizeHeaders(HttpContext? httpContext)
     {
         if (httpContext?.Request?.Headers is null || httpContext.Request.Headers.Count == 0)
@@ -78,7 +78,7 @@ public sealed class SafeRequestHeadersLayoutRenderer : AspNetLayoutRendererBase
     }
 
     /// <summary>
-    /// Gets a reusable empty dictionary instance to avoid unnecessary allocations.
+    /// Obtiene una instancia reutilizable de diccionario vacío para evitar asignaciones innecesarias.
     /// </summary>
     private static IReadOnlyDictionary<string, string> EmptyHeaders { get; } =
         new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);

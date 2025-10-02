@@ -4,14 +4,14 @@ using System.Security.Claims;
 namespace ProyectoBase.Application.Abstractions;
 
 /// <summary>
-/// Provides functionality to create JSON Web Tokens for authenticated users.
+/// Proporciona funcionalidad para crear tokens JSON Web para usuarios autenticados.
 /// </summary>
 public interface ITokenService
 {
     /// <summary>
-    /// Generates a signed JWT access token using the provided claims.
+    /// Genera un token de acceso JWT firmado utilizando los claims proporcionados.
     /// </summary>
-    /// <param name="claims">The claims to embed in the token.</param>
-    /// <returns>The serialized JWT token.</returns>
+    /// <param name="claims">Los claims que se incluirán en el token.</param>
+    /// <returns>El token JWT serializado.</returns>
     string GenerateAccessToken(IEnumerable<Claim> claims);
 }

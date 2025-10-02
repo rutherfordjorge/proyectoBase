@@ -3,24 +3,24 @@ using System;
 namespace ProyectoBase.Domain.Exceptions
 {
     /// <summary>
-    /// Represents errors that occur within the domain layer.
+    /// Representa errores que ocurren dentro de la capa de dominio.
     /// </summary>
     public class DomainException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DomainException"/> class with a specified error message.
+        /// Inicializa una nueva instancia de la clase <see cref="DomainException"/> con un mensaje de error específico.
         /// </summary>
-        /// <param name="message">The message that describes the error.</param>
+        /// <param name="message">El mensaje que describe el error.</param>
         public DomainException(string message)
             : base(message)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DomainException"/> class with a specified error message and a reference to the inner exception that is the cause of this exception.
+        /// Inicializa una nueva instancia de la clase <see cref="DomainException"/> con un mensaje de error específico y una referencia a la excepción interna que causó esta excepción.
         /// </summary>
-        /// <param name="message">The message that describes the error.</param>
-        /// <param name="innerException">The exception that is the cause of the current exception.</param>
+        /// <param name="message">El mensaje que describe el error.</param>
+        /// <param name="innerException">La excepción que provocó la excepción actual.</param>
         public DomainException(string message, Exception innerException)
             : base(message, innerException)
         {

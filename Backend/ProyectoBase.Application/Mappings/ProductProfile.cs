@@ -6,12 +6,12 @@ using ProyectoBase.Domain.Entities;
 namespace ProyectoBase.Application.Mappings;
 
 /// <summary>
-/// Defines the mappings between product domain entities and DTOs.
+/// Define los mapeos entre las entidades de dominio de productos y sus DTO.
 /// </summary>
 public class ProductProfile : Profile
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="ProductProfile"/> class.
+    /// Inicializa una nueva instancia de la clase <see cref="ProductProfile"/>.
     /// </summary>
     public ProductProfile()
     {

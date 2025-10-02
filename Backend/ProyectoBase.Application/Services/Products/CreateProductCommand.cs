@@ -4,21 +4,21 @@ using ProyectoBase.Application.DTOs;
 namespace ProyectoBase.Application.Services.Products
 {
     /// <summary>
-    /// Command used to request the creation of a new product.
+    /// Comando utilizado para solicitar la creación de un nuevo producto.
     /// </summary>
     public class CreateProductCommand : IRequest<ProductResponseDto>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CreateProductCommand"/> class.
+        /// Inicializa una nueva instancia de la clase <see cref="CreateProductCommand"/>.
         /// </summary>
-        /// <param name="product">The product data associated with the command.</param>
+        /// <param name="product">La información del producto asociada al comando.</param>
         public CreateProductCommand(ProductCreateDto product)
         {
             Product = product;
         }
 
         /// <summary>
-        /// Gets the product data provided with the command.
+        /// Obtiene la información del producto proporcionada en el comando.
         /// </summary>
         public ProductCreateDto Product { get; }
     }

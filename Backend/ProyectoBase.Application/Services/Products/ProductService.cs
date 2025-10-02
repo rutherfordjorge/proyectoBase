@@ -13,7 +13,7 @@ using ProyectoBase.Domain.Exceptions;
 namespace ProyectoBase.Application.Services.Products;
 
 /// <summary>
-/// Provides application level operations to manage products.
+/// Proporciona operaciones de nivel de aplicación para administrar productos.
 /// </summary>
 public class ProductService : IProductService
 {
@@ -26,11 +26,11 @@ public class ProductService : IProductService
     private readonly IDistributedCache _cache;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ProductService"/> class.
+    /// Inicializa una nueva instancia de la clase <see cref="ProductService"/>.
     /// </summary>
-    /// <param name="productRepository">The repository used to persist products.</param>
-    /// <param name="mapper">The mapper used to project entities into DTOs.</param>
-    /// <param name="cache">The distributed cache used to store product collections.</param>
+    /// <param name="productRepository">El repositorio utilizado para persistir productos.</param>
+    /// <param name="mapper">El mapeador utilizado para proyectar entidades en DTO.</param>
+    /// <param name="cache">La caché distribuida donde se almacenan las colecciones de productos.</param>
     public ProductService(IProductRepository productRepository, IMapper mapper, IDistributedCache cache)
     {
         _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
@@ -60,7 +60,7 @@ public class ProductService : IProductService
 
         if (entity is null)
         {
-            throw new NotFoundException($"The product with id '{product.Id}' was not found.");
+            throw new NotFoundException($"No se encontró el producto con identificador '{product.Id}'.");
         }
 
         _mapper.Map(product, entity);

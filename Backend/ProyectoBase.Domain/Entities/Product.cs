@@ -4,23 +4,23 @@ using ProyectoBase.Domain.Exceptions;
 namespace ProyectoBase.Domain.Entities
 {
     /// <summary>
-    /// Represents a product available for sale.
+    /// Representa un producto disponible para la venta.
     /// </summary>
     public class Product
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Product"/> class.
+        /// Inicializa una nueva instancia de la clase <see cref="Product"/>.
         /// </summary>
-        /// <param name="id">The unique identifier of the product.</param>
-        /// <param name="name">The name of the product.</param>
-        /// <param name="price">The unit price of the product.</param>
-        /// <param name="stock">The quantity available in stock.</param>
-        /// <param name="description">The optional description of the product.</param>
+        /// <param name="id">El identificador único del producto.</param>
+        /// <param name="name">El nombre del producto.</param>
+        /// <param name="price">El precio unitario del producto.</param>
+        /// <param name="stock">La cantidad disponible en inventario.</param>
+        /// <param name="description">La descripción opcional del producto.</param>
         public Product(Guid id, string name, decimal price, int stock, string? description = null)
         {
             if (id == Guid.Empty)
             {
-                throw new ValidationException("The product identifier must be provided.");
+                throw new ValidationException("Se debe proporcionar el identificador del producto.");
             }
 
             Id = id;
@@ -31,95 +31,95 @@ namespace ProyectoBase.Domain.Entities
         }
 
         /// <summary>
-        /// Gets the unique identifier of the product.
+        /// Obtiene el identificador único del producto.
         /// </summary>
         public Guid Id { get; }
 
         /// <summary>
-        /// Gets the name of the product.
+        /// Obtiene el nombre del producto.
         /// </summary>
         public string Name { get; private set; } = string.Empty;
 
         /// <summary>
-        /// Gets the optional description of the product.
+        /// Obtiene la descripción opcional del producto.
         /// </summary>
         public string? Description { get; private set; }
 
         /// <summary>
-        /// Gets the current price of the product.
+        /// Obtiene el precio vigente del producto.
         /// </summary>
         public decimal Price { get; private set; }
 
         /// <summary>
-        /// Gets the available stock quantity of the product.
+        /// Obtiene la cantidad disponible en inventario del producto.
         /// </summary>
         public int Stock { get; private set; }
 
         /// <summary>
-        /// Updates the name of the product.
+        /// Actualiza el nombre del producto.
         /// </summary>
-        /// <param name="name">The new name of the product.</param>
+        /// <param name="name">El nuevo nombre del producto.</param>
         public void UpdateName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ValidationException("The product name cannot be empty.");
+                throw new ValidationException("El nombre del producto no puede estar vacío.");
             }
 
             Name = name.Trim();
         }
 
         /// <summary>
-        /// Updates the description of the product.
+        /// Actualiza la descripción del producto.
         /// </summary>
-        /// <param name="description">The new description of the product.</param>
+        /// <param name="description">La nueva descripción del producto.</param>
         public void UpdateDescription(string? description)
         {
             Description = string.IsNullOrWhiteSpace(description) ? null : description.Trim();
         }
 
         /// <summary>
-        /// Changes the price of the product.
+        /// Cambia el precio del producto.
         /// </summary>
-        /// <param name="price">The new price to assign.</param>
+        /// <param name="price">El nuevo precio a asignar.</param>
         public void ChangePrice(decimal price)
         {
             if (price < 0)
             {
-                throw new ValidationException("The product price cannot be negative.");
+                throw new ValidationException("El precio del producto no puede ser negativo.");
             }
 
             Price = decimal.Round(price, 2, MidpointRounding.AwayFromZero);
         }
 
         /// <summary>
-        /// Increases the stock quantity by the specified amount.
+        /// Incrementa la cantidad en inventario en la medida indicada.
         /// </summary>
-        /// <param name="quantity">The quantity to add to the stock.</param>
+        /// <param name="quantity">La cantidad que se agregará al inventario.</param>
         public void IncreaseStock(int quantity)
         {
             if (quantity <= 0)
             {
-                throw new ValidationException("The quantity to increase must be greater than zero.");
+                throw new ValidationException("La cantidad a incrementar debe ser mayor que cero.");
             }
 
             Stock += quantity;
         }
 
         /// <summary>
-        /// Decreases the stock quantity by the specified amount.
+        /// Disminuye la cantidad en inventario en la medida indicada.
         /// </summary>
-        /// <param name="quantity">The quantity to remove from the stock.</param>
+        /// <param name="quantity">La cantidad que se retirará del inventario.</param>
         public void DecreaseStock(int quantity)
         {
             if (quantity <= 0)
             {
-                throw new ValidationException("The quantity to decrease must be greater than zero.");
+                throw new ValidationException("La cantidad a disminuir debe ser mayor que cero.");
             }
 
             if (quantity > Stock)
             {
-                throw new ValidationException("The quantity to decrease exceeds the available stock.");
+                throw new ValidationException("La cantidad a disminuir excede el inventario disponible.");
             }
 
             Stock -= quantity;
@@ -129,7 +129,7 @@ namespace ProyectoBase.Domain.Entities
         {
             if (stock < 0)
             {
-                throw new ValidationException("The product stock cannot be negative.");
+                throw new ValidationException("El inventario del producto no puede ser negativo.");
             }
 
             Stock = stock;

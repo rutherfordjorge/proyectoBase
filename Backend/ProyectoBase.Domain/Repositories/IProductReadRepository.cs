@@ -6,16 +6,16 @@ using ProyectoBase.Domain.Entities;
 namespace ProyectoBase.Domain.Repositories
 {
     /// <summary>
-    /// Provides read-only access to <see cref="Product"/> entities from a persistence store.
+    /// Proporciona acceso de solo lectura a entidades <see cref="Product"/> desde un almacén de persistencia.
     /// </summary>
     public interface IProductReadRepository
     {
         /// <summary>
-        /// Retrieves a product by its unique identifier.
+        /// Recupera un producto por su identificador único.
         /// </summary>
-        /// <param name="id">The identifier of the product to retrieve.</param>
-        /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
-        /// <returns>The product that matches the provided identifier, or <c>null</c> if it does not exist.</returns>
+        /// <param name="id">El identificador del producto que se desea obtener.</param>
+        /// <param name="cancellationToken">Token para cancelar la operación asincrónica.</param>
+        /// <returns>El producto que coincide con el identificador proporcionado o <c>null</c> si no existe.</returns>
         Task<Product?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
     }
 }

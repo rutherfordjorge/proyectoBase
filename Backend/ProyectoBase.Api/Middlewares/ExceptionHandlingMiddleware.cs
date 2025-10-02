@@ -3,14 +3,13 @@ using System.Text.Json;
 using System.Linq;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using ProyectoBase.Domain.Exceptions;
 
 namespace ProyectoBase.Api.Middlewares;
 
 /// <summary>
-/// Middleware responsible for translating unhandled exceptions into standardized HTTP responses.
+/// Middleware responsable de traducir las excepciones no controladas en respuestas HTTP estandarizadas.
 /// </summary>
 public sealed class ExceptionHandlingMiddleware
 {
@@ -20,10 +19,10 @@ public sealed class ExceptionHandlingMiddleware
     private readonly ILogger<ExceptionHandlingMiddleware> _logger;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ExceptionHandlingMiddleware"/> class.
+    /// Inicializa una nueva instancia de la clase <see cref="ExceptionHandlingMiddleware"/>.
     /// </summary>
-    /// <param name="next">The next middleware in the pipeline.</param>
-    /// <param name="logger">The logger used to emit diagnostic information.</param>
+    /// <param name="next">El siguiente middleware en la canalización.</param>
+    /// <param name="logger">El registrador utilizado para emitir información de diagnóstico.</param>
     public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
     {
         _next = next;
@@ -31,9 +30,9 @@ public sealed class ExceptionHandlingMiddleware
     }
 
     /// <summary>
-    /// Processes the current <see cref="HttpContext"/> instance.
+    /// Procesa la instancia actual de <see cref="HttpContext"/>.
     /// </summary>
-    /// <param name="context">The HTTP context.</param>
+    /// <param name="context">El contexto HTTP.</param>
     public async Task InvokeAsync(HttpContext context)
     {
         try
@@ -50,7 +49,7 @@ public sealed class ExceptionHandlingMiddleware
     {
         if (context.Response.HasStarted)
         {
-            _logger.LogError(exception, "The response has already started, the exception middleware cannot handle the error.");
+            _logger.LogError(exception, "La respuesta ya comenzó; el middleware de excepciones no puede gestionar el error.");
             throw;
         }
 
@@ -81,36 +80,36 @@ public sealed class ExceptionHandlingMiddleware
             NotFoundException notFound => new ExceptionMapping
             {
                 StatusCode = StatusCodes.Status404NotFound,
-                Error = ReasonPhrases.GetReasonPhrase(StatusCodes.Status404NotFound)!,
+                Error = "Recurso no encontrado",
                 Details = string.IsNullOrWhiteSpace(notFound.Message)
-                    ? "The requested resource was not found."
+                    ? "El recurso solicitado no fue encontrado."
                     : notFound.Message,
                 LogLevel = LogLevel.Warning,
-                LogMessage = "A not found error occurred while processing {Path}.",
+                LogMessage = "Se produjo un error de recurso no encontrado al procesar {Path}.",
             },
             Domain.Exceptions.ValidationException domainValidation => new ExceptionMapping
             {
                 StatusCode = StatusCodes.Status400BadRequest,
-                Error = ReasonPhrases.GetReasonPhrase(StatusCodes.Status400BadRequest)!,
+                Error = "Solicitud inválida",
                 Details = GetDomainValidationDetails(domainValidation),
                 LogLevel = LogLevel.Warning,
-                LogMessage = "A domain validation error occurred while processing {Path}.",
+                LogMessage = "Se produjo un error de validación de dominio al procesar {Path}.",
             },
             ValidationException fluentValidation => new ExceptionMapping
             {
                 StatusCode = StatusCodes.Status400BadRequest,
-                Error = ReasonPhrases.GetReasonPhrase(StatusCodes.Status400BadRequest)!,
+                Error = "Solicitud inválida",
                 Details = GetFluentValidationDetails(fluentValidation),
                 LogLevel = LogLevel.Warning,
-                LogMessage = "A validation error occurred while processing {Path}.",
+                LogMessage = "Se produjo un error de validación al procesar {Path}.",
             },
             _ => new ExceptionMapping
             {
                 StatusCode = StatusCodes.Status500InternalServerError,
-                Error = ReasonPhrases.GetReasonPhrase(StatusCodes.Status500InternalServerError)!,
-                Details = "An unexpected error occurred.",
+                Error = "Error interno del servidor",
+                Details = "Ocurrió un error inesperado.",
                 LogLevel = LogLevel.Error,
-                LogMessage = "An unexpected error occurred while processing {Path}.",
+                LogMessage = "Ocurrió un error inesperado al procesar {Path}.",
             },
         };
     }
@@ -118,7 +117,7 @@ public sealed class ExceptionHandlingMiddleware
     private static IReadOnlyCollection<string> GetDomainValidationDetails(Domain.Exceptions.ValidationException exception)
     {
         var message = string.IsNullOrWhiteSpace(exception.Message)
-            ? "The provided data is not valid."
+            ? "Los datos proporcionados no son válidos."
             : exception.Message;
 
         return new[] { message };
