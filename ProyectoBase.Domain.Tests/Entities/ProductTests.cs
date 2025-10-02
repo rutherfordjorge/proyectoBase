@@ -1,0 +1,57 @@
+using System;
+using FluentAssertions;
+using ProyectoBase.Domain.Entities;
+using ProyectoBase.Domain.Exceptions;
+using Xunit;
+
+namespace ProyectoBase.Domain.Tests.Entities;
+
+public class ProductTests
+{
+    [Fact]
+    public void Constructor_ShouldNormalizeAndAssignProvidedValues()
+    {
+        var id = Guid.NewGuid();
+        const string name = "  Gaming Laptop  ";
+        const string description = "  Powerful machine  ";
+        const decimal price = 1999.999m;
+        const int stock = 5;
+
+        var product = new Product(id, name, price, stock, description);
+
+        product.Id.Should().Be(id);
+        product.Name.Should().Be("Gaming Laptop");
+        product.Description.Should().Be("Powerful machine");
+        product.Price.Should().Be(2000.00m);
+        product.Stock.Should().Be(stock);
+    }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(0)]
+    public void IncreaseStock_ShouldThrowWhenQuantityIsNotPositive(int quantity)
+    {
+        var product = CreateProduct();
+
+        var action = () => product.IncreaseStock(quantity);
+
+        action.Should().Throw<ValidationException>()
+            .WithMessage("The quantity to increase must be greater than zero.");
+    }
+
+    [Fact]
+    public void DecreaseStock_ShouldThrowWhenQuantityExceedsAvailableStock()
+    {
+        var product = CreateProduct(stock: 2);
+
+        var action = () => product.DecreaseStock(5);
+
+        action.Should().Throw<ValidationException>()
+            .WithMessage("The quantity to decrease exceeds the available stock.");
+    }
+
+    private static Product CreateProduct(int stock = 10)
+    {
+        return new Product(Guid.NewGuid(), "Sample", 10m, stock, "Description");
+    }
+}
