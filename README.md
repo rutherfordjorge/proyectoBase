@@ -12,22 +12,34 @@ Este repositorio sirve como plantilla base para construir aplicaciones modernas 
 - **Comunicación:** REST API con CORS configurable
 - **Arquitectura inicial:** CRUD completo de ejemplo (`Products`)
 
+## 📂 Estructura de carpetas
+
 ```bash
 ProyectoBase/
 │
-├── ProyectoBase.Api        # API en ASP.NET Core 8
-│   ├── Controllers         # Endpoints REST (ej: ProductsController)
-│   ├── Program.cs          # Configuración del pipeline
-│   ├── appsettings.json              # Configuración común
-│   ├── appsettings.Development.json  # Valores de desarrollo
-│   └── appsettings.Production.json   # Valores de producción
+├── Backend/                               # Solución .NET (API, capas de dominio/aplicación e infraestructura)
+│   ├── ProyectoBase.Api/                  # API en ASP.NET Core 8
+│   │   ├── Controllers/                   # Endpoints REST (ej: ProductsController)
+│   │   ├── Program.cs                     # Configuración del pipeline
+│   │   ├── appsettings.json               # Configuración común
+│   │   ├── appsettings.Development.json   # Valores de desarrollo
+│   │   └── appsettings.Production.json    # Valores de producción
+│   ├── ProyectoBase.Application/
+│   ├── ProyectoBase.Domain/
+│   ├── ProyectoBase.Infrastructure/
+│   ├── ProyectoBase.Api.IntegrationTests/
+│   ├── ProyectoBase.Application.Tests/
+│   └── ProyectoBase.Domain.Tests/
 │
-└── ProyectoBase.Web        # Frontend en Angular 14
-    ├── src/app
-    │   ├── services        # ApiService para consumo de la API
-    │   └── components      # ProductCrudComponent (CRUD completo)
-    ├── angular.json
-    └── package.json
+├── Frontend/
+│   └── ProyectoBase.Web/                  # Frontend en Angular 14
+│       ├── src/app
+│       │   ├── services/                  # ApiService para consumo de la API
+│       │   └── components/                # ProductCrudComponent (CRUD completo)
+│       ├── angular.json
+│       └── package.json
+│
+└── ProyectoBase.sln
 
 ```
 ## ⚙️ Configuración
@@ -35,7 +47,7 @@ ProyectoBase/
 ### 1. Backend (API .NET 8)
 
 ```bash
-cd ProyectoBase.Api
+cd Backend/ProyectoBase.Api
 dotnet run
 
 La API quedará disponible en:
@@ -64,7 +76,7 @@ export DOTNET_Jwt__Key="${JWT_SECRET}"
 export DOTNET_Redis__ConnectionString="redis:6379,abortConnect=false"
 export DOTNET_Redis__InstanceName="ProyectoBase"
 
-dotnet run --project ProyectoBase.Api
+dotnet run --project Backend/ProyectoBase.Api
 
 # Windows PowerShell
 $env:DOTNET_ConnectionStrings__DefaultConnection = "Server=sql;Database=ProyectoBase;User Id=api;Password=$env:DB_PASSWORD;TrustServerCertificate=True;"
@@ -74,7 +86,7 @@ $env:DOTNET_Jwt__Key = $env:JWT_SECRET
 $env:DOTNET_Redis__ConnectionString = "redis:6379,abortConnect=false"
 $env:DOTNET_Redis__InstanceName = "ProyectoBase"
 
-dotnet run --project ProyectoBase.Api
+dotnet run --project Backend/ProyectoBase.Api
 ```
 
 Si la aplicación se despliega en contenedores (Docker/Kubernetes) o servicios
@@ -86,7 +98,7 @@ código fuente.
 ### 📝 Logging con NLog
 
 La API reemplaza el proveedor por defecto de ASP.NET Core y utiliza **NLog**
-(`nlog.config` en `ProyectoBase.Api`) para centralizar los logs. Cada entorno
+(`nlog.config` en `Backend/ProyectoBase.Api`) para centralizar los logs. Cada entorno
 tiene un destino distinto:
 
 - `Development`: salida estructurada en consola.
@@ -108,7 +120,7 @@ export NLOG_MINLEVEL=Debug
 # Redefinir el directorio de logs
 export NLOG_LOG_DIRECTORY=/var/log/proyecto-base
 
-dotnet run --project ProyectoBase.Api
+dotnet run --project Backend/ProyectoBase.Api
 ```
 
 Al iniciar la API, NLog leerá estas variables y adaptará los destinos de salida
@@ -120,7 +132,7 @@ El `ExceptionHandlingMiddleware` se mantiene al inicio del pipeline, por lo que
 cualquier excepción no controlada termina en NLog con el formato anterior.
 
 ```bash
-dotnet run --project ProyectoBase.Api
+dotnet run --project Backend/ProyectoBase.Api
 
 # En otra terminal generar un 404 para revisar el log estructurado
 curl -k https://localhost:5001/api/products/99999
@@ -148,7 +160,7 @@ la consola o archivo según el entorno, sin exponer credenciales.
 ### 2. Frontend (Angular 14)
 ```bash
 
-cd ProyectoBase.Web
+cd Frontend/ProyectoBase.Web
 npm install
 ng serve -o
 La aplicación se abrirá en http://localhost:4200
@@ -159,7 +171,7 @@ La aplicación se abrirá en http://localhost:4200
 Para generar la migración inicial de la base de datos se debe ejecutar el siguiente comando desde la raíz del repositorio:
 
 ```bash
-dotnet ef migrations add InitialCreate --project ProyectoBase.Infrastructure --startup-project ProyectoBase.Api --output-dir Persistence/Migrations
+dotnet ef migrations add InitialCreate --project Backend/ProyectoBase.Infrastructure --startup-project Backend/ProyectoBase.Api --output-dir Persistence/Migrations
 ```
 
 El comando utiliza el proyecto de infraestructura para almacenar las migraciones y el proyecto API como punto de entrada.

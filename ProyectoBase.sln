@@ -2,19 +2,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProyectoBase.Api", "ProyectoBase.Api\ProyectoBase.Api.csproj", "{B8DBE12D-7833-41CC-8A18-7FDFC610FB8E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProyectoBase.Api", "Backend\ProyectoBase.Api\ProyectoBase.Api.csproj", "{B8DBE12D-7833-41CC-8A18-7FDFC610FB8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProyectoBase.Domain", "ProyectoBase.Domain\ProyectoBase.Domain.csproj", "{C65F0F41-E0CB-4919-8348-DB3AA8A4949F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProyectoBase.Domain", "Backend\ProyectoBase.Domain\ProyectoBase.Domain.csproj", "{C65F0F41-E0CB-4919-8348-DB3AA8A4949F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProyectoBase.Application", "ProyectoBase.Application\ProyectoBase.Application.csproj", "{1D73C601-A31A-4F59-A51B-D26E80292F7F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProyectoBase.Application", "Backend\ProyectoBase.Application\ProyectoBase.Application.csproj", "{1D73C601-A31A-4F59-A51B-D26E80292F7F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProyectoBase.Infrastructure", "ProyectoBase.Infrastructure\ProyectoBase.Infrastructure.csproj", "{21250535-58FB-4EBE-8A40-202D033FCEAD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProyectoBase.Infrastructure", "Backend\ProyectoBase.Infrastructure\ProyectoBase.Infrastructure.csproj", "{21250535-58FB-4EBE-8A40-202D033FCEAD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProyectoBase.Application.Tests", "ProyectoBase.Application.Tests\ProyectoBase.Application.Tests.csproj", "{DA44A544-1B76-4E7B-94E8-5607068DCE14}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProyectoBase.Application.Tests", "Backend\ProyectoBase.Application.Tests\ProyectoBase.Application.Tests.csproj", "{DA44A544-1B76-4E7B-94E8-5607068DCE14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProyectoBase.Domain.Tests", "ProyectoBase.Domain.Tests\ProyectoBase.Domain.Tests.csproj", "{94E83EA3-E449-4F1B-8BF4-EA3EDF02107A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProyectoBase.Domain.Tests", "Backend\ProyectoBase.Domain.Tests\ProyectoBase.Domain.Tests.csproj", "{94E83EA3-E449-4F1B-8BF4-EA3EDF02107A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProyectoBase.Api.IntegrationTests", "ProyectoBase.Api.IntegrationTests\ProyectoBase.Api.IntegrationTests.csproj", "{4F682FD9-F845-489D-B315-037F000E5173}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProyectoBase.Api.IntegrationTests", "Backend\ProyectoBase.Api.IntegrationTests\ProyectoBase.Api.IntegrationTests.csproj", "{4F682FD9-F845-489D-B315-037F000E5173}"
 EndProject
 Global
         GlobalSection(SolutionConfigurationPlatforms) = preSolution
