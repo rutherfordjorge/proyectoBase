@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -9,8 +11,11 @@ using Microsoft.Extensions.DependencyInjection;
 using NLog.Web;
 using ProyectoBase.Api.Middlewares;
 using ProyectoBase.Api.Options;
+using ProyectoBase.Api.Swagger;
+using ProyectoBase.Api.Swagger.Filters;
 using ProyectoBase.Application;
 using ProyectoBase.Infrastructure;
+using ProyectoBase.Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,21 +24,62 @@ builder.Host.UseNLog();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+static IEnumerable<string> GetXmlDocumentationPaths()
+{
+    var assemblies = new[]
+    {
+        typeof(Program).Assembly,
+        typeof(ProyectoBase.Application.DependencyInjection).Assembly,
+        typeof(Product).Assembly,
+        typeof(ProyectoBase.Infrastructure.DependencyInjection).Assembly,
+    };
+
+    return assemblies
+        .Select(assembly => Path.Combine(AppContext.BaseDirectory, $"{assembly.GetName().Name}.xml"))
+        .Distinct(StringComparer.OrdinalIgnoreCase)
+        .Where(File.Exists);
+}
+
+builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo
+    foreach (var xmlPath in GetXmlDocumentationPaths())
     {
-        Title = "ProyectoBase API",
-        Version = "v1",
+        options.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
+    }
+
+    options.OperationFilter<DefaultResponsesOperationFilter>();
+
+    options.MapCodeEnumsFromAssemblies(
+        typeof(Program).Assembly,
+        typeof(Product).Assembly,
+        typeof(ProyectoBase.Application.DependencyInjection).Assembly,
+        typeof(ProyectoBase.Infrastructure.DependencyInjection).Assembly);
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "JWT Authorization header using the Bearer scheme.",
     });
 
-    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFilename);
-
-    if (File.Exists(xmlPath))
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
-        options.IncludeXmlComments(xmlPath);
-    }
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer",
+                },
+            },
+            Array.Empty<string>()
+        },
+    });
 });
 
 builder.Services.AddApiVersioning(options =>
