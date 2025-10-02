@@ -1,3 +1,4 @@
+using ProyectoBase.Api.Middleware;
 using ProyectoBase.Api.Options;
 using ProyectoBase.Application;
 using ProyectoBase.Infrastructure;
@@ -27,6 +28,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ValidationExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 
