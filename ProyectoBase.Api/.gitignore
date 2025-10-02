@@ -273,8 +273,6 @@ FodyWeavers.xsd
 .env.local
 .env.development
 .env.production
-appsettings.Development.json
-appsettings.Local.json
 
 # Secrets
 secrets.json
