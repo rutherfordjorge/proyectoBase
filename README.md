@@ -54,7 +54,7 @@ La API quedará disponible en:
 
 Swagger: https://localhost:5001/swagger
 
-Endpoints: https://localhost:5001/api/products
+Endpoints: https://localhost:5001/api/v1/products
 
 📌 CORS: se configura en appsettings.json (propiedad AllowedOrigins).
 
@@ -135,7 +135,7 @@ cualquier excepción no controlada termina en NLog con el formato anterior.
 dotnet run --project Backend/ProyectoBase.Api
 
 # En otra terminal generar un 404 para revisar el log estructurado
-curl -k https://localhost:5001/api/products/99999
+curl -k https://localhost:5001/api/v1/products/99999
 ```
 
 El middleware responde con un JSON estandarizado y el error queda registrado en
@@ -180,15 +180,15 @@ El comando utiliza el proyecto de infraestructura para almacenar las migraciones
 ```bash
 API (ProductsController)
 
-GET /api/products → Lista todos los productos.
+GET /api/v1/products → Lista todos los productos.
 
-GET /api/products/{id} → Obtiene un producto por ID.
+GET /api/v1/products/{id} → Obtiene un producto por ID.
 
-POST /api/products → Crea un producto.
+POST /api/v1/products → Crea un producto.
 
-PUT /api/products/{id} → Actualiza un producto existente.
+PUT /api/v1/products/{id} → Actualiza un producto existente.
 
-DELETE /api/products/{id} → Elimina un producto.
+DELETE /api/v1/products/{id} → Elimina un producto.
 ```
 🌐 Frontend
 ```bash

@@ -1,6 +1,39 @@
-@ProyectoBase.Api_HostAddress = http://localhost:5083
+@ProyectoBase.Api_HostAddress = https://localhost:5001
 
-GET {{ProyectoBase.Api_HostAddress}}/weatherforecast/
+### Productos - Obtener todos
+GET {{ProyectoBase.Api_HostAddress}}/api/v1/products
+Accept: application/json
+
+### Productos - Obtener por identificador
+GET {{ProyectoBase.Api_HostAddress}}/api/v1/products/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Productos - Crear
+POST {{ProyectoBase.Api_HostAddress}}/api/v1/products
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Teclado mecánico",
+  "description": "Switches rojos, iluminación RGB",
+  "price": 149.99,
+  "stock": 25
+}
+
+### Productos - Actualizar
+PUT {{ProyectoBase.Api_HostAddress}}/api/v1/products/00000000-0000-0000-0000-000000000001
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Teclado mecánico compacto",
+  "description": "Factor de forma 60% con RGB",
+  "price": 139.99,
+  "stock": 30
+}
+
+### Productos - Eliminar
+DELETE {{ProyectoBase.Api_HostAddress}}/api/v1/products/00000000-0000-0000-0000-000000000001
 Accept: application/json
 
 ###
