@@ -4,14 +4,14 @@ using ProyectoBase.Application.DTOs;
 namespace ProyectoBase.Application.Validators
 {
     /// <summary>
-    /// Validator that ensures <see cref="ProductCreateDto"/> instances contain valid data.
+    /// Ensures <see cref="ProductCreateDto"/> instances contain valid data before being processed.
     /// </summary>
-    public class ProductCreateDtoValidator : AbstractValidator<ProductCreateDto>
+    public class CreateProductDtoValidator : AbstractValidator<ProductCreateDto>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProductCreateDtoValidator"/> class.
+        /// Initializes a new instance of the <see cref="CreateProductDtoValidator"/> class.
         /// </summary>
-        public ProductCreateDtoValidator()
+        public CreateProductDtoValidator()
         {
             RuleFor(product => product.Name)
                 .NotEmpty()
