@@ -3,8 +3,6 @@ using System.Reflection;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using ProyectoBase.Api.Application.Abstractions;
-using ProyectoBase.Api.Application.Services.Products;
 
 namespace ProyectoBase.Api.Application;
 
@@ -30,8 +28,6 @@ public static class DependencyInjection
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         services.AddAutoMapper(typeof(StartupAssemblyMarker).Assembly);
-
-        services.AddScoped<IProductService, ProductService>();
 
         return services;
     }
