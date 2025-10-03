@@ -84,9 +84,14 @@ public sealed class ExceptionHandlingMiddleware
             {
                 StatusCode = StatusCodes.Status404NotFound,
                 Error = new ErrorResponse(notFound.Code, "Recurso no encontrado"),
-                Details = string.IsNullOrWhiteSpace(notFound.Message)
-                    ? DomainErrors.General.NotFound.Message
-                    : notFound.Message,
+                Details = new[]
+                {
+                    new ErrorDetail(
+                        notFound.Code,
+                        string.IsNullOrWhiteSpace(notFound.Message)
+                            ? DomainErrors.General.NotFound.Message
+                            : notFound.Message),
+                },
                 LogLevel = LogLevel.Warning,
                 LogMessage = "Se produjo un error de recurso no encontrado al procesar {Path}.",
             },
@@ -110,7 +115,7 @@ public sealed class ExceptionHandlingMiddleware
             {
                 StatusCode = StatusCodes.Status500InternalServerError,
                 Error = new ErrorResponse(ApiErrorCodes.Unexpected, "Error interno del servidor"),
-                Details = "Ocurrió un error inesperado.",
+                Details = new[] { new ErrorDetail(ApiErrorCodes.Unexpected, "Ocurrió un error inesperado.") },
                 LogLevel = LogLevel.Error,
                 LogMessage = "Ocurrió un error inesperado al procesar {Path}.",
             },
@@ -144,7 +149,7 @@ public sealed class ExceptionHandlingMiddleware
 
         public required ErrorResponse Error { get; init; }
 
-        public required object Details { get; init; }
+        public required IReadOnlyCollection<ErrorDetail> Details { get; init; }
 
         public required LogLevel LogLevel { get; init; }
 
