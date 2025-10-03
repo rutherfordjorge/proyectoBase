@@ -7,6 +7,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
+using ProyectoBase.Api.Domain;
 using ProyectoBase.Api.IntegrationTests.Infrastructure;
 using ProyectoBase.Api.Application.DTOs;
 using Xunit;
@@ -73,8 +74,17 @@ public class ProductsControllerTests : IClassFixture<CustomWebApplicationFactory
         error.Should().NotBeNull();
         error!.Status.Should().Be((int)HttpStatusCode.NotFound);
         error.Error.Message.Should().Be("Recurso no encontrado");
-        error.Details.ValueKind.Should().Be(JsonValueKind.String);
-        error.Details.GetString().Should().Contain("El producto solicitado no fue encontrado.");
+        error.Details.ValueKind.Should().Be(JsonValueKind.Array);
+
+        var details = error.Details.EnumerateArray().ToArray();
+        details.Should().HaveCount(1);
+
+        var detail = details[0];
+        detail.ValueKind.Should().Be(JsonValueKind.Object);
+        detail.TryGetProperty("code", out var code).Should().BeTrue();
+        detail.TryGetProperty("message", out var message).Should().BeTrue();
+        code.GetString().Should().Be(DomainErrorCodes.NotFound);
+        message.GetString().Should().Be("El producto solicitado no fue encontrado.");
     }
 
     [Fact]
@@ -279,8 +289,17 @@ public class ProductsControllerTests : IClassFixture<CustomWebApplicationFactory
         error.Should().NotBeNull();
         error!.Status.Should().Be((int)HttpStatusCode.NotFound);
         error.Error.Message.Should().Be("Recurso no encontrado");
-        error.Details.ValueKind.Should().Be(JsonValueKind.String);
-        error.Details.GetString().Should().Contain("El producto solicitado no fue encontrado.");
+        error.Details.ValueKind.Should().Be(JsonValueKind.Array);
+
+        var details = error.Details.EnumerateArray().ToArray();
+        details.Should().HaveCount(1);
+
+        var detail = details[0];
+        detail.ValueKind.Should().Be(JsonValueKind.Object);
+        detail.TryGetProperty("code", out var code).Should().BeTrue();
+        detail.TryGetProperty("message", out var message).Should().BeTrue();
+        code.GetString().Should().Be(DomainErrorCodes.NotFound);
+        message.GetString().Should().Be("El producto solicitado no fue encontrado.");
     }
 
     private static async Task<ProductResponseDto> CreateProductAsync(HttpClient client, ProductCreateDto request)
