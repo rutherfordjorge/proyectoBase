@@ -1,4 +1,5 @@
 using System;
+using ProyectoBase.Api.Domain;
 using ProyectoBase.Api.Domain.Exceptions;
 
 namespace ProyectoBase.Api.Domain.ValueObjects
@@ -28,7 +29,7 @@ namespace ProyectoBase.Api.Domain.ValueObjects
         {
             if (value < 0)
             {
-                throw new ValidationException("El inventario del producto no puede ser negativo.");
+                throw new ValidationException(DomainErrors.Product.StockCannotBeNegative);
             }
 
             return new ProductStock(value);
@@ -44,7 +45,7 @@ namespace ProyectoBase.Api.Domain.ValueObjects
         {
             if (quantity <= 0)
             {
-                throw new ValidationException("La cantidad a incrementar debe ser mayor que cero.");
+                throw new ValidationException(DomainErrors.Product.StockIncreaseQuantityMustBePositive);
             }
 
             var result = checked(Value + quantity);
@@ -61,12 +62,12 @@ namespace ProyectoBase.Api.Domain.ValueObjects
         {
             if (quantity <= 0)
             {
-                throw new ValidationException("La cantidad a disminuir debe ser mayor que cero.");
+                throw new ValidationException(DomainErrors.Product.StockDecreaseQuantityMustBePositive);
             }
 
             if (quantity > Value)
             {
-                throw new ValidationException("La cantidad a disminuir excede el inventario disponible.");
+                throw new ValidationException(DomainErrors.Product.StockDecreaseQuantityExceedsAvailable);
             }
 
             return new ProductStock(Value - quantity);

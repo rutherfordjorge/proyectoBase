@@ -1,4 +1,5 @@
 using System;
+using ProyectoBase.Api.Domain;
 using ProyectoBase.Api.Domain.Exceptions;
 using ProyectoBase.Api.Domain.ValueObjects;
 
@@ -34,7 +35,7 @@ namespace ProyectoBase.Api.Domain.Entities
         {
             if (id == Guid.Empty)
             {
-                throw new ValidationException("Se debe proporcionar el identificador del producto.");
+                throw new ValidationException(DomainErrors.Product.IdRequired);
             }
 
             ArgumentNullException.ThrowIfNull(name);

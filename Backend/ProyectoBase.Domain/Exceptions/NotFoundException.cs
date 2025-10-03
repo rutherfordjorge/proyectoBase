@@ -1,3 +1,5 @@
+using ProyectoBase.Api.Domain;
+
 namespace ProyectoBase.Api.Domain.Exceptions
 {
     /// <summary>
@@ -5,13 +7,13 @@ namespace ProyectoBase.Api.Domain.Exceptions
     /// </summary>
     public class NotFoundException : DomainException
     {
-        private const string DefaultMessage = "El recurso solicitado no fue encontrado.";
+        private static readonly DomainError DefaultError = DomainErrors.General.NotFound;
 
         /// <summary>
         /// Inicializa una nueva instancia de la clase <see cref="NotFoundException"/>.
         /// </summary>
         public NotFoundException()
-            : base(DefaultMessage)
+            : base(DefaultError)
         {
         }
 
@@ -20,7 +22,16 @@ namespace ProyectoBase.Api.Domain.Exceptions
         /// </summary>
         /// <param name="message">El mensaje que describe el error.</param>
         public NotFoundException(string message)
-            : base(message)
+            : base(DomainErrorCodes.NotFound, message)
+        {
+        }
+
+        /// <summary>
+        /// Inicializa una nueva instancia de la clase <see cref="NotFoundException"/> con un descriptor de error específico.
+        /// </summary>
+        /// <param name="error">El descriptor que describe el error.</param>
+        public NotFoundException(DomainError error)
+            : base(error)
         {
         }
     }

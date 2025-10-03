@@ -1,5 +1,6 @@
 using FluentAssertions;
 using ProyectoBase.Api.Domain.Exceptions;
+using ProyectoBase.Api.Domain;
 using ProyectoBase.Api.Domain.ValueObjects;
 using Xunit;
 
@@ -23,8 +24,11 @@ public class ProductNameTests
     {
         var action = () => ProductName.Create(value!);
 
+        var expectedError = DomainErrors.Product.NameIsMissing;
+
         action.Should().Throw<ValidationException>()
-            .WithMessage("El nombre del producto no puede estar vacío.");
+            .Where(exception => exception.Code == expectedError.Code)
+            .WithMessage(expectedError.Message);
     }
 
     [Fact]
@@ -32,8 +36,11 @@ public class ProductNameTests
     {
         var action = () => ProductName.Create("A");
 
+        var expectedError = DomainErrors.Product.NameLengthIsInvalid(ProductName.MinLength, ProductName.MaxLength);
+
         action.Should().Throw<ValidationException>()
-            .WithMessage($"El nombre del producto debe tener entre {ProductName.MinLength} y {ProductName.MaxLength} caracteres.");
+            .Where(exception => exception.Code == expectedError.Code)
+            .WithMessage(expectedError.Message);
     }
 
     [Fact]
@@ -43,7 +50,10 @@ public class ProductNameTests
 
         var action = () => ProductName.Create(value);
 
+        var expectedError = DomainErrors.Product.NameLengthIsInvalid(ProductName.MinLength, ProductName.MaxLength);
+
         action.Should().Throw<ValidationException>()
-            .WithMessage($"El nombre del producto debe tener entre {ProductName.MinLength} y {ProductName.MaxLength} caracteres.");
+            .Where(exception => exception.Code == expectedError.Code)
+            .WithMessage(expectedError.Message);
     }
 }

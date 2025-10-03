@@ -1,5 +1,6 @@
 using System;
 using FluentAssertions;
+using ProyectoBase.Api.Domain;
 using ProyectoBase.Api.Domain.Entities;
 using ProyectoBase.Api.Domain.Exceptions;
 using Xunit;
@@ -35,8 +36,11 @@ public class ProductTests
 
         var action = () => product.IncreaseStock(quantity);
 
+        var expectedError = DomainErrors.Product.StockIncreaseQuantityMustBePositive;
+
         action.Should().Throw<ValidationException>()
-            .WithMessage("La cantidad a incrementar debe ser mayor que cero.");
+            .Where(exception => exception.Code == expectedError.Code)
+            .WithMessage(expectedError.Message);
     }
 
     [Fact]
@@ -46,8 +50,11 @@ public class ProductTests
 
         var action = () => product.DecreaseStock(5);
 
+        var expectedError = DomainErrors.Product.StockDecreaseQuantityExceedsAvailable;
+
         action.Should().Throw<ValidationException>()
-            .WithMessage("La cantidad a disminuir excede el inventario disponible.");
+            .Where(exception => exception.Code == expectedError.Code)
+            .WithMessage(expectedError.Message);
     }
 
     private static Product CreateProduct(int stock = 10)

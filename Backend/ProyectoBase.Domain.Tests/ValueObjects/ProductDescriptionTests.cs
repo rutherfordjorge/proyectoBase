@@ -1,5 +1,6 @@
 using FluentAssertions;
 using ProyectoBase.Api.Domain.Exceptions;
+using ProyectoBase.Api.Domain;
 using ProyectoBase.Api.Domain.ValueObjects;
 using Xunit;
 
@@ -30,7 +31,10 @@ public class ProductDescriptionTests
 
         var action = () => ProductDescription.Create(value);
 
+        var expectedError = DomainErrors.Product.DescriptionLengthIsInvalid(ProductDescription.MaxLength);
+
         action.Should().Throw<ValidationException>()
-            .WithMessage($"La descripción del producto no puede superar los {ProductDescription.MaxLength} caracteres.");
+            .Where(exception => exception.Code == expectedError.Code)
+            .WithMessage(expectedError.Message);
     }
 }

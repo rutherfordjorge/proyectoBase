@@ -1,9 +1,12 @@
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text.Json;
 using System.Linq;
+using System.Text.Json;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using ProyectoBase.Api.Api.Errors;
+using ProyectoBase.Api.Domain;
 using ProyectoBase.Api.Domain.Exceptions;
 
 namespace ProyectoBase.Api.Api.Middlewares;
@@ -80,9 +83,9 @@ public sealed class ExceptionHandlingMiddleware
             NotFoundException notFound => new ExceptionMapping
             {
                 StatusCode = StatusCodes.Status404NotFound,
-                Error = "Recurso no encontrado",
+                Error = new ErrorResponse(notFound.Code, "Recurso no encontrado"),
                 Details = string.IsNullOrWhiteSpace(notFound.Message)
-                    ? "El recurso solicitado no fue encontrado."
+                    ? DomainErrors.General.NotFound.Message
                     : notFound.Message,
                 LogLevel = LogLevel.Warning,
                 LogMessage = "Se produjo un error de recurso no encontrado al procesar {Path}.",
@@ -90,7 +93,7 @@ public sealed class ExceptionHandlingMiddleware
             Domain.Exceptions.ValidationException domainValidation => new ExceptionMapping
             {
                 StatusCode = StatusCodes.Status400BadRequest,
-                Error = "Solicitud inválida",
+                Error = new ErrorResponse(domainValidation.Code, "Solicitud inválida"),
                 Details = GetDomainValidationDetails(domainValidation),
                 LogLevel = LogLevel.Warning,
                 LogMessage = "Se produjo un error de validación de dominio al procesar {Path}.",
@@ -98,7 +101,7 @@ public sealed class ExceptionHandlingMiddleware
             ValidationException fluentValidation => new ExceptionMapping
             {
                 StatusCode = StatusCodes.Status400BadRequest,
-                Error = "Solicitud inválida",
+                Error = new ErrorResponse(ApiErrorCodes.RequestValidation, "Solicitud inválida"),
                 Details = GetFluentValidationDetails(fluentValidation),
                 LogLevel = LogLevel.Warning,
                 LogMessage = "Se produjo un error de validación al procesar {Path}.",
@@ -106,7 +109,7 @@ public sealed class ExceptionHandlingMiddleware
             _ => new ExceptionMapping
             {
                 StatusCode = StatusCodes.Status500InternalServerError,
-                Error = "Error interno del servidor",
+                Error = new ErrorResponse(ApiErrorCodes.Unexpected, "Error interno del servidor"),
                 Details = "Ocurrió un error inesperado.",
                 LogLevel = LogLevel.Error,
                 LogMessage = "Ocurrió un error inesperado al procesar {Path}.",
@@ -114,21 +117,24 @@ public sealed class ExceptionHandlingMiddleware
         };
     }
 
-    private static IReadOnlyCollection<string> GetDomainValidationDetails(Domain.Exceptions.ValidationException exception)
+    private static IReadOnlyCollection<ErrorDetail> GetDomainValidationDetails(Domain.Exceptions.ValidationException exception)
     {
         var message = string.IsNullOrWhiteSpace(exception.Message)
-            ? "Los datos proporcionados no son válidos."
+            ? DomainErrors.General.Validation.Message
             : exception.Message;
 
-        return new[] { message };
+        return new[] { new ErrorDetail(exception.Code, message) };
     }
 
-    private static IReadOnlyCollection<string> GetFluentValidationDetails(ValidationException exception)
+    private static IReadOnlyCollection<ErrorDetail> GetFluentValidationDetails(ValidationException exception)
     {
         return exception.Errors
-            .Select(error => error.ErrorMessage)
-            .Where(message => !string.IsNullOrWhiteSpace(message))
-            .Distinct(StringComparer.Ordinal)
+            .Select(error => new ErrorDetail(
+                string.IsNullOrWhiteSpace(error.ErrorCode) ? ApiErrorCodes.RequestValidation : error.ErrorCode,
+                error.ErrorMessage))
+            .Where(detail => !string.IsNullOrWhiteSpace(detail.Message))
+            .GroupBy(detail => detail.Message, StringComparer.Ordinal)
+            .Select(group => group.First())
             .ToArray();
     }
 
@@ -136,7 +142,7 @@ public sealed class ExceptionHandlingMiddleware
     {
         public required int StatusCode { get; init; }
 
-        public required string Error { get; init; }
+        public required ErrorResponse Error { get; init; }
 
         public required object Details { get; init; }
 
@@ -144,4 +150,8 @@ public sealed class ExceptionHandlingMiddleware
 
         public required string LogMessage { get; init; }
     }
+
+    private sealed record ErrorResponse(string Code, string Message);
+
+    private sealed record ErrorDetail(string Code, string Message);
 }

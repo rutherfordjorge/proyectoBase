@@ -1,4 +1,5 @@
 using System;
+using ProyectoBase.Api.Domain;
 using ProyectoBase.Api.Domain.Exceptions;
 
 namespace ProyectoBase.Api.Domain.ValueObjects
@@ -40,7 +41,7 @@ namespace ProyectoBase.Api.Domain.ValueObjects
 
             if (normalized.Length > MaxLength)
             {
-                throw new ValidationException($"La descripción del producto no puede superar los {MaxLength} caracteres.");
+                throw new ValidationException(DomainErrors.Product.DescriptionLengthIsInvalid(MaxLength));
             }
 
             return new ProductDescription(normalized);
