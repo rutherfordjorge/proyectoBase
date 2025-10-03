@@ -81,7 +81,21 @@ public class ExceptionHandlingMiddlewareTests
         var error = response.GetProperty("error");
         Assert.Equal(DomainErrorCodes.NotFound, error.GetProperty("code").GetString());
         Assert.Equal("Recurso no encontrado", error.GetProperty("message").GetString());
-        Assert.Equal(DomainErrors.Product.NotFound(Guid.Empty).Message, response.GetProperty("details").GetString());
+
+        var details = response.GetProperty("details");
+        Assert.Equal(JsonValueKind.Array, details.ValueKind);
+
+        var detailItems = details
+            .EnumerateArray()
+            .Select(element => new ErrorDetail(
+                element.GetProperty("code").GetString(),
+                element.GetProperty("message").GetString()))
+            .ToArray();
+
+        Assert.Single(detailItems);
+        var expectedError = DomainErrors.Product.NotFound(Guid.Empty);
+        Assert.Equal(expectedError.Code, detailItems[0].Code);
+        Assert.Equal(expectedError.Message, detailItems[0].Message);
     }
 
     [Fact]
@@ -95,7 +109,20 @@ public class ExceptionHandlingMiddlewareTests
         var error = response.GetProperty("error");
         Assert.Equal(ApiErrorCodes.Unexpected, error.GetProperty("code").GetString());
         Assert.Equal("Error interno del servidor", error.GetProperty("message").GetString());
-        Assert.Equal("Ocurrió un error inesperado.", response.GetProperty("details").GetString());
+
+        var details = response.GetProperty("details");
+        Assert.Equal(JsonValueKind.Array, details.ValueKind);
+
+        var detailItems = details
+            .EnumerateArray()
+            .Select(element => new ErrorDetail(
+                element.GetProperty("code").GetString(),
+                element.GetProperty("message").GetString()))
+            .ToArray();
+
+        Assert.Single(detailItems);
+        Assert.Equal(ApiErrorCodes.Unexpected, detailItems[0].Code);
+        Assert.Equal("Ocurrió un error inesperado.", detailItems[0].Message);
     }
 
     [Fact]
