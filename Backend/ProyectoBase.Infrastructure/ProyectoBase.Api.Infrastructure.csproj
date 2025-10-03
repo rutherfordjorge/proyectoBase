@@ -29,7 +29,4 @@
     <ProjectReference Include="..\ProyectoBase.Application\ProyectoBase.Api.Application.csproj" />
     <ProjectReference Include="..\ProyectoBase.Domain\ProyectoBase.Api.Domain.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Persistence\Migrations\**\*.cs" />
-  </ItemGroup>
 </Project>
