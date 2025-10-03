@@ -48,7 +48,7 @@ namespace ProyectoBase.Api.Domain.Services
                 throw new NotFoundException($"No se encontró el producto '{productId}'.");
             }
 
-            return product.Stock >= quantity;
+            return product.Stock.Value >= quantity;
         }
     }
 }

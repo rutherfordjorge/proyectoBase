@@ -1,5 +1,6 @@
 using System;
 using ProyectoBase.Api.Domain.Exceptions;
+using ProyectoBase.Api.Domain.ValueObjects;
 
 namespace ProyectoBase.Api.Domain.Entities
 {
@@ -17,43 +18,67 @@ namespace ProyectoBase.Api.Domain.Entities
         /// <param name="stock">La cantidad disponible en inventario.</param>
         /// <param name="description">La descripción opcional del producto.</param>
         public Product(Guid id, string name, decimal price, int stock, string? description = null)
+            : this(id, ProductName.Create(name), Money.From(price), ProductStock.Create(stock), ProductDescription.Create(description))
+        {
+        }
+
+        /// <summary>
+        /// Inicializa una nueva instancia de la clase <see cref="Product"/> utilizando objetos de valor.
+        /// </summary>
+        /// <param name="id">El identificador único del producto.</param>
+        /// <param name="name">El nombre del producto.</param>
+        /// <param name="price">El precio unitario del producto.</param>
+        /// <param name="stock">La cantidad disponible en inventario.</param>
+        /// <param name="description">La descripción opcional del producto.</param>
+        public Product(Guid id, ProductName name, Money price, ProductStock stock, ProductDescription? description = null)
         {
             if (id == Guid.Empty)
             {
                 throw new ValidationException("Se debe proporcionar el identificador del producto.");
             }
 
+            ArgumentNullException.ThrowIfNull(name);
+            ArgumentNullException.ThrowIfNull(price);
+            ArgumentNullException.ThrowIfNull(stock);
+
             Id = id;
-            UpdateName(name);
-            UpdateDescription(description);
-            ChangePrice(price);
-            SetStock(stock);
+            Name = name;
+            Price = price;
+            Stock = stock;
+            Description = description;
+        }
+
+        private Product()
+        {
+            Name = null!;
+            Price = null!;
+            Stock = null!;
         }
 
         /// <summary>
         /// Obtiene el identificador único del producto.
         /// </summary>
-        public Guid Id { get; }
+        public Guid Id { get; private set; }
 
         /// <summary>
         /// Obtiene el nombre del producto.
         /// </summary>
-        public string Name { get; private set; } = string.Empty;
+        public ProductName Name { get; private set; }
 
         /// <summary>
         /// Obtiene la descripción opcional del producto.
         /// </summary>
-        public string? Description { get; private set; }
+        public ProductDescription? Description { get; private set; }
 
         /// <summary>
         /// Obtiene el precio vigente del producto.
         /// </summary>
-        public decimal Price { get; private set; }
+        public Money Price { get; private set; }
 
         /// <summary>
         /// Obtiene la cantidad disponible en inventario del producto.
         /// </summary>
-        public int Stock { get; private set; }
+        public ProductStock Stock { get; private set; }
 
         /// <summary>
         /// Actualiza el nombre del producto.
@@ -61,12 +86,7 @@ namespace ProyectoBase.Api.Domain.Entities
         /// <param name="name">El nuevo nombre del producto.</param>
         public void UpdateName(string name)
         {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new ValidationException("El nombre del producto no puede estar vacío.");
-            }
-
-            Name = name.Trim();
+            Name = ProductName.Create(name);
         }
 
         /// <summary>
@@ -75,7 +95,7 @@ namespace ProyectoBase.Api.Domain.Entities
         /// <param name="description">La nueva descripción del producto.</param>
         public void UpdateDescription(string? description)
         {
-            Description = string.IsNullOrWhiteSpace(description) ? null : description.Trim();
+            Description = ProductDescription.Create(description);
         }
 
         /// <summary>
@@ -84,12 +104,7 @@ namespace ProyectoBase.Api.Domain.Entities
         /// <param name="price">El nuevo precio a asignar.</param>
         public void ChangePrice(decimal price)
         {
-            if (price < 0)
-            {
-                throw new ValidationException("El precio del producto no puede ser negativo.");
-            }
-
-            Price = decimal.Round(price, 2, MidpointRounding.AwayFromZero);
+            Price = Money.From(price);
         }
 
         /// <summary>
@@ -98,12 +113,7 @@ namespace ProyectoBase.Api.Domain.Entities
         /// <param name="quantity">La cantidad que se agregará al inventario.</param>
         public void IncreaseStock(int quantity)
         {
-            if (quantity <= 0)
-            {
-                throw new ValidationException("La cantidad a incrementar debe ser mayor que cero.");
-            }
-
-            Stock += quantity;
+            Stock = Stock.Increase(quantity);
         }
 
         /// <summary>
@@ -112,27 +122,7 @@ namespace ProyectoBase.Api.Domain.Entities
         /// <param name="quantity">La cantidad que se retirará del inventario.</param>
         public void DecreaseStock(int quantity)
         {
-            if (quantity <= 0)
-            {
-                throw new ValidationException("La cantidad a disminuir debe ser mayor que cero.");
-            }
-
-            if (quantity > Stock)
-            {
-                throw new ValidationException("La cantidad a disminuir excede el inventario disponible.");
-            }
-
-            Stock -= quantity;
-        }
-
-        private void SetStock(int stock)
-        {
-            if (stock < 0)
-            {
-                throw new ValidationException("El inventario del producto no puede ser negativo.");
-            }
-
-            Stock = stock;
+            Stock = Stock.Decrease(quantity);
         }
     }
 }

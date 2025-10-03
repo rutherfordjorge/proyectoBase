@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ProyectoBase.Api.Domain.Entities;
+using ProyectoBase.Api.Domain.ValueObjects;
 
 namespace ProyectoBase.Api.Infrastructure.Persistence.Configurations
 {
@@ -21,16 +22,20 @@ namespace ProyectoBase.Api.Infrastructure.Persistence.Configurations
 
             builder.Property(product => product.Name)
                 .IsRequired()
-                .HasMaxLength(200);
+                .HasConversion(name => name.Value, value => ProductName.Create(value))
+                .HasMaxLength(ProductName.MaxLength);
 
             builder.Property(product => product.Description)
-                .HasMaxLength(500);
+                .HasConversion(description => description != null ? description.Value : null, value => ProductDescription.Create(value))
+                .HasMaxLength(ProductDescription.MaxLength);
 
             builder.Property(product => product.Price)
+                .HasConversion(price => price.Amount, value => Money.From(value))
                 .HasColumnType("decimal(18,2)");
 
             builder.Property(product => product.Stock)
-                .IsRequired();
+                .IsRequired()
+                .HasConversion(stock => stock.Value, value => ProductStock.Create(value));
         }
     }
 }
