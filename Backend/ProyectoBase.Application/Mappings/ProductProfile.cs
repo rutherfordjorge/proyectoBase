@@ -25,9 +25,9 @@ public class ProductProfile : Profile
                 product.UpdateDescription(dto.Description);
                 product.ChangePrice(dto.Price);
 
-                if (dto.Stock != product.Stock)
+                if (dto.Stock != product.Stock.Value)
                 {
-                    var difference = dto.Stock - product.Stock;
+                    var difference = dto.Stock - product.Stock.Value;
 
                     if (difference > 0)
                     {
@@ -40,6 +40,10 @@ public class ProductProfile : Profile
                 }
             });
 
-        CreateMap<Product, ProductResponseDto>();
+        CreateMap<Product, ProductResponseDto>()
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name.Value))
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description != null ? src.Description.Value : null))
+            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price.Amount))
+            .ForMember(dest => dest.Stock, opt => opt.MapFrom(src => src.Stock.Value));
     }
 }

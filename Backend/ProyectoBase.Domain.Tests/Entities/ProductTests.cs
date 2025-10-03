@@ -20,10 +20,10 @@ public class ProductTests
         var product = new Product(id, name, price, stock, description);
 
         product.Id.Should().Be(id);
-        product.Name.Should().Be("Gaming Laptop");
-        product.Description.Should().Be("Powerful machine");
-        product.Price.Should().Be(2000.00m);
-        product.Stock.Should().Be(stock);
+        product.Name.Value.Should().Be("Gaming Laptop");
+        product.Description!.Value.Should().Be("Powerful machine");
+        product.Price.Amount.Should().Be(2000.00m);
+        product.Stock.Value.Should().Be(stock);
     }
 
     [Theory]
@@ -36,7 +36,7 @@ public class ProductTests
         var action = () => product.IncreaseStock(quantity);
 
         action.Should().Throw<ValidationException>()
-            .WithMessage("The quantity to increase must be greater than zero.");
+            .WithMessage("La cantidad a incrementar debe ser mayor que cero.");
     }
 
     [Fact]
@@ -47,7 +47,7 @@ public class ProductTests
         var action = () => product.DecreaseStock(5);
 
         action.Should().Throw<ValidationException>()
-            .WithMessage("The quantity to decrease exceeds the available stock.");
+            .WithMessage("La cantidad a disminuir excede el inventario disponible.");
     }
 
     private static Product CreateProduct(int stock = 10)

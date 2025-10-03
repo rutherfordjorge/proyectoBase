@@ -58,7 +58,7 @@ public class ProductStockServiceTests
         var act = async () => await _sut.IsStockAvailableAsync(productId, 1, CancellationToken.None).ConfigureAwait(false);
 
         await act.Should().ThrowAsync<NotFoundException>()
-            .WithMessage($"The product '{productId}' was not found.");
+            .WithMessage($"No se encontró el producto '{productId}'.");
     }
 
     [Fact]
@@ -69,7 +69,7 @@ public class ProductStockServiceTests
         var act = async () => await _sut.IsStockAvailableAsync(productId, 0, CancellationToken.None).ConfigureAwait(false);
 
         await act.Should().ThrowAsync<ValidationException>()
-            .WithMessage("The quantity to check must be greater than zero.");
+            .WithMessage("La cantidad a verificar debe ser mayor que cero.");
 
         _repositoryMock.Verify(repository => repository.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Never);
     }
