@@ -67,6 +67,14 @@ public class ProductsControllerTests : IClassFixture<CustomWebApplicationFactory
         var response = await _client.GetAsync($"/api/v1/Products/{Guid.NewGuid()}").ConfigureAwait(false);
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+        var error = await ReadStandardErrorAsync(response).ConfigureAwait(false);
+
+        error.Should().NotBeNull();
+        error!.Status.Should().Be((int)HttpStatusCode.NotFound);
+        error.Error.Message.Should().Be("Recurso no encontrado");
+        error.Details.ValueKind.Should().Be(JsonValueKind.String);
+        error.Details.GetString().Should().Contain("El producto solicitado no fue encontrado.");
     }
 
     [Fact]
