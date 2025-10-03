@@ -58,6 +58,14 @@ Endpoints: https://localhost:5001/api/v1/products
 
 📌 CORS: se configura en appsettings.json (propiedad AllowedOrigins).
 
+### 🔍 Health checks
+
+- `GET /health`: verificación de *liveness* simple que confirma que la API está en ejecución.
+- `GET /health/live`: equivalente a `/health`, útil para sondas de contenedores.
+- `GET /health/ready`: comprueba dependencias externas (SQL Server y Redis) usando las cadenas configuradas en `appsettings*` o variables de entorno.
+
+Los paquetes `Microsoft.Extensions.Diagnostics.HealthChecks.SqlServer` y `Microsoft.Extensions.Diagnostics.HealthChecks.Redis` se encargan de ejecutar las sondas contra las dependencias configuradas.
+
 ### 🌍 Variables de entorno y configuración
 
 ASP.NET Core permite sobreescribir los archivos `appsettings*.json` mediante

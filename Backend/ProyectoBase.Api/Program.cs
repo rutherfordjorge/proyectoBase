@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
@@ -158,6 +159,30 @@ builder.Services.AddCors(options =>
     });
 });
 
+var healthChecksBuilder = builder.Services.AddHealthChecks();
+
+var defaultConnection = builder.Configuration.GetConnectionString(ConnectionStringsOptions.DefaultConnectionName)
+    ?? builder.Configuration[$"{ConnectionStringsOptions.SectionName}:{nameof(ConnectionStringsOptions.DefaultConnection)}"];
+
+if (!string.IsNullOrWhiteSpace(defaultConnection))
+{
+    healthChecksBuilder.AddSqlServer(
+        connectionString: defaultConnection,
+        healthQuery: "SELECT 1;",
+        name: "sqlserver",
+        tags: new[] { "ready" });
+}
+
+var redisOptions = builder.Configuration.GetSection(RedisOptions.SectionName).Get<RedisOptions>();
+
+if (!string.IsNullOrWhiteSpace(redisOptions?.ConnectionString))
+{
+    healthChecksBuilder.AddRedis(
+        redisConnectionString: redisOptions.ConnectionString,
+        name: "redis",
+        tags: new[] { "ready" });
+}
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -210,5 +235,20 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    Predicate = _ => false,
+});
+
+app.MapHealthChecks("/health/live", new HealthCheckOptions
+{
+    Predicate = _ => false,
+});
+
+app.MapHealthChecks("/health/ready", new HealthCheckOptions
+{
+    Predicate = registration => registration.Tags.Contains("ready", StringComparer.OrdinalIgnoreCase),
+});
 
 app.Run();
