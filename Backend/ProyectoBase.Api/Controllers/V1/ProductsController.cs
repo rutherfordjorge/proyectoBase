@@ -5,12 +5,17 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ProyectoBase.Api.Application.Abstractions;
 using ProyectoBase.Api.Application.DTOs;
+using ProyectoBase.Api.Application.Products.Commands.CreateProduct;
+using ProyectoBase.Api.Application.Products.Commands.DeleteProduct;
+using ProyectoBase.Api.Application.Products.Commands.UpdateProduct;
+using ProyectoBase.Api.Application.Products.Queries.GetAllProducts;
+using ProyectoBase.Api.Application.Products.Queries.GetProductById;
 using ProyectoBase.Api.Domain.Exceptions;
 
 namespace ProyectoBase.Api.Api.Controllers.V1;
@@ -24,16 +29,16 @@ namespace ProyectoBase.Api.Api.Controllers.V1;
 [Route("api/v{version:apiVersion}/[controller]")]
 public class ProductsController : ControllerBase
 {
-    private readonly IProductService _productService;
+    private readonly IMediator _mediator;
     private readonly ILogger<ProductsController> _logger;
 
     /// <summary>
     /// Inicializa una nueva instancia de la clase <see cref="ProductsController"/>.
     /// </summary>
-    /// <param name="productService">El servicio responsable de las operaciones de productos.</param>
-    public ProductsController(IProductService productService, ILogger<ProductsController> logger)
+    /// <param name="mediator">El mediador encargado de coordinar las operaciones de productos.</param>
+    public ProductsController(IMediator mediator, ILogger<ProductsController> logger)
     {
-        _productService = productService ?? throw new ArgumentNullException(nameof(productService));
+        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -49,7 +54,7 @@ public class ProductsController : ControllerBase
     {
         try
         {
-            var products = await _productService.GetAllAsync(cancellationToken).ConfigureAwait(false);
+            var products = await _mediator.Send(new GetAllProductsQuery(), cancellationToken).ConfigureAwait(false);
 
             return Ok(products);
         }
@@ -74,7 +79,7 @@ public class ProductsController : ControllerBase
     {
         try
         {
-            var product = await _productService.GetByIdAsync(id, cancellationToken).ConfigureAwait(false);
+            var product = await _mediator.Send(new GetProductByIdQuery(id), cancellationToken).ConfigureAwait(false);
 
             if (product is null)
             {
@@ -111,7 +116,7 @@ public class ProductsController : ControllerBase
     {
         try
         {
-            var createdProduct = await _productService.CreateAsync(product, cancellationToken).ConfigureAwait(false);
+            var createdProduct = await _mediator.Send(new CreateProductCommand(product), cancellationToken).ConfigureAwait(false);
             var version = HttpContext.GetRequestedApiVersion()?.ToString() ?? "1.0";
 
             return CreatedAtAction(nameof(GetProductByIdAsync), new { id = createdProduct.Id, version }, createdProduct);
@@ -157,7 +162,7 @@ public class ProductsController : ControllerBase
 
         try
         {
-            var updatedProduct = await _productService.UpdateAsync(product, cancellationToken).ConfigureAwait(false);
+            var updatedProduct = await _mediator.Send(new UpdateProductCommand(product), cancellationToken).ConfigureAwait(false);
 
             return Ok(updatedProduct);
         }
@@ -199,7 +204,7 @@ public class ProductsController : ControllerBase
     {
         try
         {
-            var existingProduct = await _productService.GetByIdAsync(id, cancellationToken).ConfigureAwait(false);
+            var existingProduct = await _mediator.Send(new GetProductByIdQuery(id), cancellationToken).ConfigureAwait(false);
 
             if (existingProduct is null)
             {
@@ -208,7 +213,7 @@ public class ProductsController : ControllerBase
                 return CreateErrorResponse(StatusCodes.Status404NotFound, "Recurso no encontrado", message);
             }
 
-            await _productService.DeleteAsync(id, cancellationToken).ConfigureAwait(false);
+            await _mediator.Send(new DeleteProductCommand(id), cancellationToken).ConfigureAwait(false);
 
             return NoContent();
         }
