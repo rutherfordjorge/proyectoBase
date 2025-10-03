@@ -49,7 +49,7 @@ El siguiente inventario detalla los paquetes NuGet utilizados en cada proyecto d
 
 | Paquete | Versión | Propósito | Ejemplo en el código |
 | --- | --- | --- | --- |
-| FluentValidation.TestHelper | 11.9.0 | Simplifica pruebas de validadores de FluentValidation. | `CreateProductDtoValidatorTests` usa `TestValidate` y aserciones específicas para comprobar reglas de validación.【F:Backend/ProyectoBase.Application.Tests/Validators/CreateProductDtoValidatorTests.cs†L15-L58】 |
+| FluentValidation | 11.9.0 | Expone los validadores y extensiones de prueba (`FluentValidation.TestHelper`) usados por los tests. | `CreateProductDtoValidatorTests` llama a `validator.TestValidate(...)` y usa extensiones como `ShouldHaveValidationErrorFor`.【F:Backend/ProyectoBase.Application.Tests/Validators/CreateProductDtoValidatorTests.cs†L15-L58】 |
 | Microsoft.NET.Test.Sdk | 17.11.1 | Proporciona la infraestructura para descubrir y ejecutar pruebas .NET. | Permite que los atributos `[Fact]` de xUnit en los proyectos de prueba se ejecuten mediante el runner de .NET.【F:Backend/ProyectoBase.Application.Tests/Validators/CreateProductDtoValidatorTests.cs†L15-L58】 |
 | xunit | 2.9.0 | Framework de pruebas unitarias utilizado en el proyecto. | Las pruebas marcan métodos con `[Fact]` para validar casos de negocio del validador y servicios de dominio.【F:Backend/ProyectoBase.Application.Tests/Validators/CreateProductDtoValidatorTests.cs†L15-L58】 |
 | xunit.runner.visualstudio | 2.8.2 | Integra las pruebas xUnit con Visual Studio y otros runners basados en VS Test. | Declarado con `PrivateAssets="all"` para habilitar la ejecución desde `dotnet test` y herramientas de CI.【F:Backend/ProyectoBase.Application.Tests/ProyectoBase.Api.Application.Tests.csproj†L17-L20】 |
