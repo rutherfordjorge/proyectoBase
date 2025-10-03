@@ -18,7 +18,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.8" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1">
+      <!-- Required to resolve ILogger dependencies in the infrastructure layer. -->
+    </PackageReference>
     <PackageReference Include="Polly" Version="7.2.4" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.507">
