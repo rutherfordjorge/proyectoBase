@@ -27,6 +27,58 @@ public class ProductTests
         product.Stock.Value.Should().Be(stock);
     }
 
+    [Fact]
+    public void Constructor_ShouldThrowWhenIdIsEmpty()
+    {
+        // Invariante: el identificador del producto no puede ser Guid.Empty.
+        var action = () => new Product(Guid.Empty, "Valid", 10m, 5, "Description");
+
+        var expectedError = DomainErrors.Product.IdRequired;
+
+        action.Should().Throw<ValidationException>()
+            .Where(exception => exception.Code == expectedError.Code)
+            .WithMessage(expectedError.Message);
+    }
+
+    [Fact]
+    public void Constructor_ShouldThrowWhenNameIsNull()
+    {
+        // Invariante: el nombre del producto no puede ser nulo ni vacío.
+        var action = () => new Product(Guid.NewGuid(), null!, 10m, 5, "Description");
+
+        var expectedError = DomainErrors.Product.NameIsMissing;
+
+        action.Should().Throw<ValidationException>()
+            .Where(exception => exception.Code == expectedError.Code)
+            .WithMessage(expectedError.Message);
+    }
+
+    [Fact]
+    public void Constructor_ShouldThrowWhenPriceIsNegative()
+    {
+        // Invariante: el precio debe ser cero o positivo.
+        var action = () => new Product(Guid.NewGuid(), "Valid", -1m, 5, "Description");
+
+        var expectedError = DomainErrors.Product.PriceCannotBeNegative;
+
+        action.Should().Throw<ValidationException>()
+            .Where(exception => exception.Code == expectedError.Code)
+            .WithMessage(expectedError.Message);
+    }
+
+    [Fact]
+    public void Constructor_ShouldThrowWhenStockIsNegative()
+    {
+        // Invariante: el inventario inicial no puede ser negativo.
+        var action = () => new Product(Guid.NewGuid(), "Valid", 10m, -1, "Description");
+
+        var expectedError = DomainErrors.Product.StockCannotBeNegative;
+
+        action.Should().Throw<ValidationException>()
+            .Where(exception => exception.Code == expectedError.Code)
+            .WithMessage(expectedError.Message);
+    }
+
     [Theory]
     [InlineData(-1)]
     [InlineData(0)]
@@ -37,6 +89,38 @@ public class ProductTests
         var action = () => product.IncreaseStock(quantity);
 
         var expectedError = DomainErrors.Product.StockIncreaseQuantityMustBePositive;
+
+        action.Should().Throw<ValidationException>()
+            .Where(exception => exception.Code == expectedError.Code)
+            .WithMessage(expectedError.Message);
+    }
+
+    [Fact]
+    public void ChangePrice_ShouldThrowWhenAmountIsNegative()
+    {
+        // Invariante: el precio siempre debe permanecer mayor o igual que cero.
+        var product = CreateProduct();
+
+        var action = () => product.ChangePrice(-5m);
+
+        var expectedError = DomainErrors.Product.PriceCannotBeNegative;
+
+        action.Should().Throw<ValidationException>()
+            .Where(exception => exception.Code == expectedError.Code)
+            .WithMessage(expectedError.Message);
+    }
+
+    [Theory]
+    [InlineData(-3)]
+    [InlineData(0)]
+    public void DecreaseStock_ShouldThrowWhenQuantityIsNotPositive(int quantity)
+    {
+        // Invariante: la disminución de inventario requiere cantidades estrictamente positivas.
+        var product = CreateProduct();
+
+        var action = () => product.DecreaseStock(quantity);
+
+        var expectedError = DomainErrors.Product.StockDecreaseQuantityMustBePositive;
 
         action.Should().Throw<ValidationException>()
             .Where(exception => exception.Code == expectedError.Code)
