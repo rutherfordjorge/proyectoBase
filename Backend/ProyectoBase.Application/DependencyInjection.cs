@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using FluentValidation;
-using FluentValidation.DependencyInjectionExtensions;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,7 +25,7 @@ public static class DependencyInjection
             configuration.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
         });
 
-        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        services.AddValidatorsFromAssemblyContaining<StartupAssemblyMarker>();
 
         services.AddAutoMapper(typeof(StartupAssemblyMarker).Assembly);
 
