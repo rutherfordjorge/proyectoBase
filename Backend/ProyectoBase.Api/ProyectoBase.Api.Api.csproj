@@ -29,6 +29,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ProyectoBase.Application\ProyectoBase.Api.Application.csproj" />
+    <ProjectReference Include="..\ProyectoBase.Infrastructure\ProyectoBase.Api.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="nlog.config">
