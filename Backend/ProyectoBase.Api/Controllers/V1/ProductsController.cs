@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -52,17 +49,9 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IReadOnlyCollection<ProductResponseDto>>> GetProductsAsync(CancellationToken cancellationToken)
     {
-        try
-        {
-            var products = await _mediator.Send(new GetAllProductsQuery(), cancellationToken).ConfigureAwait(false);
+        var products = await _mediator.Send(new GetAllProductsQuery(), cancellationToken).ConfigureAwait(false);
 
-            return Ok(products);
-        }
-        catch (DomainException domainException)
-        {
-            _logger.LogWarning(domainException, "Se produjo un error de dominio al obtener el listado de productos.");
-            return CreateErrorResponse(StatusCodes.Status400BadRequest, "Solicitud inválida", domainException.Message);
-        }
+        return Ok(products);
     }
 
     /// <summary>
@@ -77,29 +66,15 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<ProductResponseDto>> GetProductByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        try
-        {
-            var product = await _mediator.Send(new GetProductByIdQuery(id), cancellationToken).ConfigureAwait(false);
+        var product = await _mediator.Send(new GetProductByIdQuery(id), cancellationToken).ConfigureAwait(false);
 
-            if (product is null)
-            {
-                const string message = "El producto solicitado no fue encontrado.";
-                _logger.LogWarning("No se encontró el producto con identificador {ProductId}.", id);
-                return CreateErrorResponse(StatusCodes.Status404NotFound, "Recurso no encontrado", message);
-            }
+        if (product is null)
+        {
+            _logger.LogWarning("No se encontró el producto con identificador {ProductId}.", id);
+            throw new NotFoundException("El producto solicitado no fue encontrado.");
+        }
 
-            return Ok(product);
-        }
-        catch (NotFoundException notFoundException)
-        {
-            _logger.LogWarning(notFoundException, "No se encontró el producto con identificador {ProductId}.", id);
-            return CreateErrorResponse(StatusCodes.Status404NotFound, "Recurso no encontrado", notFoundException.Message);
-        }
-        catch (DomainException domainException)
-        {
-            _logger.LogWarning(domainException, "Se produjo un error de dominio al obtener el producto {ProductId}.", id);
-            return CreateErrorResponse(StatusCodes.Status400BadRequest, "Solicitud inválida", domainException.Message);
-        }
+        return Ok(product);
     }
 
     /// <summary>
@@ -114,29 +89,10 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<ProductResponseDto>> CreateProductAsync([FromBody] ProductCreateDto product, CancellationToken cancellationToken)
     {
-        try
-        {
-            var createdProduct = await _mediator.Send(new CreateProductCommand(product), cancellationToken).ConfigureAwait(false);
-            var version = HttpContext.GetRequestedApiVersion()?.ToString() ?? "1.0";
+        var createdProduct = await _mediator.Send(new CreateProductCommand(product), cancellationToken).ConfigureAwait(false);
+        var version = HttpContext.GetRequestedApiVersion()?.ToString() ?? "1.0";
 
-            return CreatedAtAction(nameof(GetProductByIdAsync), new { id = createdProduct.Id, version }, createdProduct);
-        }
-        catch (Domain.Exceptions.ValidationException validationException)
-        {
-            _logger.LogWarning(validationException, "Los datos del nuevo producto no superaron la validación de dominio.");
-            return CreateErrorResponse(StatusCodes.Status400BadRequest, "Solicitud inválida", validationException.Message);
-        }
-        catch (ValidationException validationException)
-        {
-            var details = GetFluentValidationDetails(validationException);
-            _logger.LogWarning(validationException, "Los datos del nuevo producto no superaron la validación del modelo.");
-            return CreateErrorResponse(StatusCodes.Status400BadRequest, "Solicitud inválida", details);
-        }
-        catch (DomainException domainException)
-        {
-            _logger.LogWarning(domainException, "Se produjo un error de dominio al crear un producto.");
-            return CreateErrorResponse(StatusCodes.Status400BadRequest, "Solicitud inválida", domainException.Message);
-        }
+        return CreatedAtAction(nameof(GetProductByIdAsync), new { id = createdProduct.Id, version }, createdProduct);
     }
 
     /// <summary>
@@ -155,38 +111,14 @@ public class ProductsController : ControllerBase
     {
         if (product.Id != Guid.Empty && product.Id != id)
         {
-            return BadRequest("El identificador proporcionado no coincide con el valor de la ruta.");
+            throw new ValidationException("El identificador proporcionado no coincide con el valor de la ruta.");
         }
 
         product.Id = id;
 
-        try
-        {
-            var updatedProduct = await _mediator.Send(new UpdateProductCommand(product), cancellationToken).ConfigureAwait(false);
+        var updatedProduct = await _mediator.Send(new UpdateProductCommand(product), cancellationToken).ConfigureAwait(false);
 
-            return Ok(updatedProduct);
-        }
-        catch (NotFoundException notFoundException)
-        {
-            _logger.LogWarning(notFoundException, "No se encontró el producto con identificador {ProductId} para actualizar.", id);
-            return CreateErrorResponse(StatusCodes.Status404NotFound, "Recurso no encontrado", notFoundException.Message);
-        }
-        catch (Domain.Exceptions.ValidationException validationException)
-        {
-            _logger.LogWarning(validationException, "Los datos del producto {ProductId} no superaron la validación de dominio.", id);
-            return CreateErrorResponse(StatusCodes.Status400BadRequest, "Solicitud inválida", validationException.Message);
-        }
-        catch (ValidationException validationException)
-        {
-            var details = GetFluentValidationDetails(validationException);
-            _logger.LogWarning(validationException, "Los datos del producto {ProductId} no superaron la validación del modelo.", id);
-            return CreateErrorResponse(StatusCodes.Status400BadRequest, "Solicitud inválida", details);
-        }
-        catch (DomainException domainException)
-        {
-            _logger.LogWarning(domainException, "Se produjo un error de dominio al actualizar el producto {ProductId}.", id);
-            return CreateErrorResponse(StatusCodes.Status400BadRequest, "Solicitud inválida", domainException.Message);
-        }
+        return Ok(updatedProduct);
     }
 
     /// <summary>
@@ -202,54 +134,16 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> DeleteProductAsync(Guid id, CancellationToken cancellationToken)
     {
-        try
+        var existingProduct = await _mediator.Send(new GetProductByIdQuery(id), cancellationToken).ConfigureAwait(false);
+
+        if (existingProduct is null)
         {
-            var existingProduct = await _mediator.Send(new GetProductByIdQuery(id), cancellationToken).ConfigureAwait(false);
-
-            if (existingProduct is null)
-            {
-                const string message = "El producto solicitado no fue encontrado.";
-                _logger.LogWarning("No se encontró el producto con identificador {ProductId} para eliminar.", id);
-                return CreateErrorResponse(StatusCodes.Status404NotFound, "Recurso no encontrado", message);
-            }
-
-            await _mediator.Send(new DeleteProductCommand(id), cancellationToken).ConfigureAwait(false);
-
-            return NoContent();
+            _logger.LogWarning("No se encontró el producto con identificador {ProductId} para eliminar.", id);
+            throw new NotFoundException("El producto solicitado no fue encontrado.");
         }
-        catch (NotFoundException notFoundException)
-        {
-            _logger.LogWarning(notFoundException, "No se encontró el producto con identificador {ProductId} para eliminar.", id);
-            return CreateErrorResponse(StatusCodes.Status404NotFound, "Recurso no encontrado", notFoundException.Message);
-        }
-        catch (DomainException domainException)
-        {
-            _logger.LogWarning(domainException, "Se produjo un error de dominio al eliminar el producto {ProductId}.", id);
-            return CreateErrorResponse(StatusCodes.Status400BadRequest, "Solicitud inválida", domainException.Message);
-        }
-    }
 
-    private ObjectResult CreateErrorResponse(int statusCode, string error, object? details)
-    {
-        var traceId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+        await _mediator.Send(new DeleteProductCommand(id), cancellationToken).ConfigureAwait(false);
 
-        var payload = new
-        {
-            traceId,
-            status = statusCode,
-            error,
-            details,
-        };
-
-        return StatusCode(statusCode, payload);
-    }
-
-    private static IReadOnlyCollection<string> GetFluentValidationDetails(ValidationException exception)
-    {
-        return exception.Errors
-            .Select(error => error.ErrorMessage)
-            .Where(message => !string.IsNullOrWhiteSpace(message))
-            .Distinct(StringComparer.Ordinal)
-            .ToArray();
+        return NoContent();
     }
 }

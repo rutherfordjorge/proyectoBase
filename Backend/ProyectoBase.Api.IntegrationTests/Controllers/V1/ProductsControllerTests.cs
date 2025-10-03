@@ -136,12 +136,12 @@ public class ProductsControllerTests : IClassFixture<CustomWebApplicationFactory
 
         error.Should().NotBeNull();
         error!.Status.Should().Be((int)HttpStatusCode.BadRequest);
-        error.Error.Should().Be("Solicitud inválida");
+        error.Error.Message.Should().Be("Solicitud inválida");
         error.Details.ValueKind.Should().Be(JsonValueKind.Array);
 
         var messages = error.Details
             .EnumerateArray()
-            .Select(element => element.GetString())
+            .Select(element => element.TryGetProperty("message", out var message) ? message.GetString() : null)
             .Where(message => !string.IsNullOrWhiteSpace(message))
             .ToArray();
 
@@ -171,9 +171,15 @@ public class ProductsControllerTests : IClassFixture<CustomWebApplicationFactory
 
         error.Should().NotBeNull();
         error!.Status.Should().Be((int)HttpStatusCode.BadRequest);
-        error.Error.Should().Be("Solicitud inválida");
-        error.Details.ValueKind.Should().Be(JsonValueKind.String);
-        error.Details.GetString().Should().Contain("El nombre del producto debe tener entre 2 y 100 caracteres.");
+        error.Error.Message.Should().Be("Solicitud inválida");
+        error.Details.ValueKind.Should().Be(JsonValueKind.Array);
+
+        var detail = error.Details
+            .EnumerateArray()
+            .First();
+
+        detail.TryGetProperty("message", out var detailMessage).Should().BeTrue();
+        detailMessage.GetString().Should().Contain("El nombre del producto debe tener entre 2 y 100 caracteres.");
     }
 
     [Fact]
@@ -264,7 +270,7 @@ public class ProductsControllerTests : IClassFixture<CustomWebApplicationFactory
 
         error.Should().NotBeNull();
         error!.Status.Should().Be((int)HttpStatusCode.NotFound);
-        error.Error.Should().Be("Recurso no encontrado");
+        error.Error.Message.Should().Be("Recurso no encontrado");
         error.Details.ValueKind.Should().Be(JsonValueKind.String);
         error.Details.GetString().Should().Contain("El producto solicitado no fue encontrado.");
     }
@@ -291,5 +297,7 @@ public class ProductsControllerTests : IClassFixture<CustomWebApplicationFactory
         return await JsonSerializer.DeserializeAsync<StandardErrorResponse>(stream, JsonOptions).ConfigureAwait(false);
     }
 
-    private sealed record StandardErrorResponse(string TraceId, int Status, string Error, JsonElement Details);
+    private sealed record StandardErrorResponse(string TraceId, int Status, ErrorContent Error, JsonElement Details);
+
+    private sealed record ErrorContent(string Code, string Message);
 }
