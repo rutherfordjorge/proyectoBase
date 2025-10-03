@@ -1,4 +1,5 @@
 using System;
+using ProyectoBase.Api.Domain;
 using ProyectoBase.Api.Domain.Exceptions;
 
 namespace ProyectoBase.Api.Domain.ValueObjects
@@ -28,7 +29,7 @@ namespace ProyectoBase.Api.Domain.ValueObjects
         {
             if (amount < 0)
             {
-                throw new ValidationException("El precio del producto no puede ser negativo.");
+                throw new ValidationException(DomainErrors.Product.PriceCannotBeNegative);
             }
 
             return new Money(amount);

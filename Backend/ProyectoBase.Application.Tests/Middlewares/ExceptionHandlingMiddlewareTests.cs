@@ -1,10 +1,14 @@
+using System;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging.Abstractions;
+using ProyectoBase.Api.Api.Errors;
 using ProyectoBase.Api.Api.Middlewares;
+using ProyectoBase.Api.Domain;
 using DomainNotFoundException = ProyectoBase.Api.Domain.Exceptions.NotFoundException;
 using DomainValidationException = ProyectoBase.Api.Domain.Exceptions.ValidationException;
 using Xunit;
@@ -27,41 +31,57 @@ public class ExceptionHandlingMiddlewareTests
         var (context, response) = await InvokeMiddlewareAsync(Next).ConfigureAwait(false);
 
         Assert.Equal(StatusCodes.Status400BadRequest, context.Response.StatusCode);
-        Assert.Equal("Bad Request", response.GetProperty("error").GetString());
+        var error = response.GetProperty("error");
+        Assert.Equal(ApiErrorCodes.RequestValidation, error.GetProperty("code").GetString());
+        Assert.Equal("Solicitud inválida", error.GetProperty("message").GetString());
 
-        var details = response.GetProperty("details").EnumerateArray().Select(element => element!.GetString()).ToArray();
+        var details = response.GetProperty("details").EnumerateArray()
+            .Select(element => new ErrorDetail(
+                element.GetProperty("code").GetString(),
+                element.GetProperty("message").GetString()))
+            .ToArray();
 
         Assert.Equal(2, details.Length);
-        Assert.Contains("The name field is required.", details);
-        Assert.Contains("The price must be greater than zero.", details);
+        Assert.All(details, detail => Assert.Equal(ApiErrorCodes.RequestValidation, detail.Code));
+        Assert.Contains("The name field is required.", details.Select(detail => detail.Message));
+        Assert.Contains("The price must be greater than zero.", details.Select(detail => detail.Message));
     }
 
     [Fact]
     public async Task Should_convert_domain_validation_exception_into_bad_request_response()
     {
-        static Task Next(HttpContext _) => throw new DomainValidationException("Domain validation failure.");
+        static Task Next(HttpContext _) => throw new DomainValidationException(DomainErrors.Product.IdRequired);
 
         var (context, response) = await InvokeMiddlewareAsync(Next).ConfigureAwait(false);
 
         Assert.Equal(StatusCodes.Status400BadRequest, context.Response.StatusCode);
-        Assert.Equal("Bad Request", response.GetProperty("error").GetString());
+        var error = response.GetProperty("error");
+        Assert.Equal(DomainErrors.Product.IdRequired.Code, error.GetProperty("code").GetString());
+        Assert.Equal("Solicitud inválida", error.GetProperty("message").GetString());
 
-        var details = response.GetProperty("details").EnumerateArray().Select(element => element!.GetString()).ToArray();
+        var details = response.GetProperty("details").EnumerateArray()
+            .Select(element => new ErrorDetail(
+                element.GetProperty("code").GetString(),
+                element.GetProperty("message").GetString()))
+            .ToArray();
 
         Assert.Single(details);
-        Assert.Equal("Domain validation failure.", details[0]);
+        Assert.Equal(DomainErrors.Product.IdRequired.Code, details[0].Code);
+        Assert.Equal(DomainErrors.Product.IdRequired.Message, details[0].Message);
     }
 
     [Fact]
     public async Task Should_convert_not_found_exception_into_not_found_response()
     {
-        static Task Next(HttpContext _) => throw new DomainNotFoundException("Entity not found.");
+        static Task Next(HttpContext _) => throw new DomainNotFoundException(DomainErrors.Product.NotFound(Guid.Empty));
 
         var (context, response) = await InvokeMiddlewareAsync(Next).ConfigureAwait(false);
 
         Assert.Equal(StatusCodes.Status404NotFound, context.Response.StatusCode);
-        Assert.Equal("Not Found", response.GetProperty("error").GetString());
-        Assert.Equal("Entity not found.", response.GetProperty("details").GetString());
+        var error = response.GetProperty("error");
+        Assert.Equal(DomainErrorCodes.NotFound, error.GetProperty("code").GetString());
+        Assert.Equal("Recurso no encontrado", error.GetProperty("message").GetString());
+        Assert.Equal(DomainErrors.Product.NotFound(Guid.Empty).Message, response.GetProperty("details").GetString());
     }
 
     [Fact]
@@ -72,8 +92,10 @@ public class ExceptionHandlingMiddlewareTests
         var (context, response) = await InvokeMiddlewareAsync(Next).ConfigureAwait(false);
 
         Assert.Equal(StatusCodes.Status500InternalServerError, context.Response.StatusCode);
-        Assert.Equal("Internal Server Error", response.GetProperty("error").GetString());
-        Assert.Equal("An unexpected error occurred.", response.GetProperty("details").GetString());
+        var error = response.GetProperty("error");
+        Assert.Equal(ApiErrorCodes.Unexpected, error.GetProperty("code").GetString());
+        Assert.Equal("Error interno del servidor", error.GetProperty("message").GetString());
+        Assert.Equal("Ocurrió un error inesperado.", response.GetProperty("details").GetString());
     }
 
     [Fact]
@@ -107,4 +129,6 @@ public class ExceptionHandlingMiddlewareTests
 
         return (context, document.RootElement.Clone());
     }
+
+    private sealed record ErrorDetail(string? Code, string? Message);
 }

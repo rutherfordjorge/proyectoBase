@@ -1,5 +1,6 @@
 using FluentAssertions;
 using ProyectoBase.Api.Domain.Exceptions;
+using ProyectoBase.Api.Domain;
 using ProyectoBase.Api.Domain.ValueObjects;
 using Xunit;
 
@@ -20,7 +21,10 @@ public class MoneyTests
     {
         var action = () => Money.From(-0.01m);
 
+        var expectedError = DomainErrors.Product.PriceCannotBeNegative;
+
         action.Should().Throw<ValidationException>()
-            .WithMessage("El precio del producto no puede ser negativo.");
+            .Where(exception => exception.Code == expectedError.Code)
+            .WithMessage(expectedError.Message);
     }
 }

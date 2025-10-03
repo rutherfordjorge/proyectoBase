@@ -1,4 +1,5 @@
 using System;
+using ProyectoBase.Api.Domain;
 using ProyectoBase.Api.Domain.Exceptions;
 
 namespace ProyectoBase.Api.Domain.ValueObjects
@@ -38,14 +39,14 @@ namespace ProyectoBase.Api.Domain.ValueObjects
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                throw new ValidationException("El nombre del producto no puede estar vacío.");
+                throw new ValidationException(DomainErrors.Product.NameIsMissing);
             }
 
             var normalized = value.Trim();
 
             if (normalized.Length < MinLength || normalized.Length > MaxLength)
             {
-                throw new ValidationException($"El nombre del producto debe tener entre {MinLength} y {MaxLength} caracteres.");
+                throw new ValidationException(DomainErrors.Product.NameLengthIsInvalid(MinLength, MaxLength));
             }
 
             return new ProductName(normalized);

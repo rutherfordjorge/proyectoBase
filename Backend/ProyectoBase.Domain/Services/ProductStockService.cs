@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ProyectoBase.Api.Domain;
 using ProyectoBase.Api.Domain.Entities;
 using ProyectoBase.Api.Domain.Exceptions;
 using ProyectoBase.Api.Domain.Repositories;
@@ -38,14 +39,14 @@ namespace ProyectoBase.Api.Domain.Services
         {
             if (quantity <= 0)
             {
-                throw new ValidationException("La cantidad a verificar debe ser mayor que cero.");
+                throw new ValidationException(DomainErrors.Product.StockQuantityToCheckMustBePositive);
             }
 
             var product = await _productRepository.GetByIdAsync(productId, cancellationToken).ConfigureAwait(false);
 
             if (product is null)
             {
-                throw new NotFoundException($"No se encontró el producto '{productId}'.");
+                throw new NotFoundException(DomainErrors.Product.NotFound(productId));
             }
 
             return product.Stock.Value >= quantity;

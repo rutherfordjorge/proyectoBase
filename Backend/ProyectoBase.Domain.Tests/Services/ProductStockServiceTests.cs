@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
+using ProyectoBase.Api.Domain;
 using ProyectoBase.Api.Domain.Entities;
 using ProyectoBase.Api.Domain.Exceptions;
 using ProyectoBase.Api.Domain.Repositories;
@@ -57,8 +58,11 @@ public class ProductStockServiceTests
 
         var act = async () => await _sut.IsStockAvailableAsync(productId, 1, CancellationToken.None).ConfigureAwait(false);
 
+        var expectedError = DomainErrors.Product.NotFound(productId);
+
         await act.Should().ThrowAsync<NotFoundException>()
-            .WithMessage($"No se encontró el producto '{productId}'.");
+            .Where(exception => exception.Code == expectedError.Code)
+            .WithMessage(expectedError.Message);
     }
 
     [Fact]
@@ -68,8 +72,11 @@ public class ProductStockServiceTests
 
         var act = async () => await _sut.IsStockAvailableAsync(productId, 0, CancellationToken.None).ConfigureAwait(false);
 
+        var expectedError = DomainErrors.Product.StockQuantityToCheckMustBePositive;
+
         await act.Should().ThrowAsync<ValidationException>()
-            .WithMessage("La cantidad a verificar debe ser mayor que cero.");
+            .Where(exception => exception.Code == expectedError.Code)
+            .WithMessage(expectedError.Message);
 
         _repositoryMock.Verify(repository => repository.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Never);
     }
