@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Registry;
+using Polly.CircuitBreaker;
 using ProyectoBase.Api.Application.Abstractions;
 using ProyectoBase.Api.Infrastructure.Authentication;
 using ProyectoBase.Api.Infrastructure.Persistence;
@@ -77,11 +78,11 @@ public static class DependencyInjection
             var circuitBreakerPolicy = Policy.Handle<Exception>().CircuitBreakerAsync(
                 handledEventsAllowedBeforeBreaking: 5,
                 durationOfBreak: TimeSpan.FromSeconds(30),
-                onBreak: (exception, breakDelay) =>
+                onBreak: (exception, breakDelay, _) =>
                 {
                     logger.LogError(exception, "Circuito abierto durante {Delay} segundos debido a fallas reiteradas.", breakDelay.TotalSeconds);
                 },
-                onReset: () => logger.LogInformation("Circuito cerrado: las operaciones se estabilizaron."),
+                onReset: _ => logger.LogInformation("Circuito cerrado: las operaciones se estabilizaron."),
                 onHalfOpen: () => logger.LogInformation("Circuito medio abierto: la siguiente llamada es de prueba."));
 
             registry.Add(RetryPolicyName, retryPolicy);
