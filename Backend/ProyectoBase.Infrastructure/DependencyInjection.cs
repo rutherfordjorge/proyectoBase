@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Registry;
+using Polly.CircuitBreaker;
 using ProyectoBase.Api.Application.Abstractions;
 using ProyectoBase.Api.Infrastructure.Authentication;
 using ProyectoBase.Api.Infrastructure.Persistence;
