@@ -15,6 +15,7 @@ El siguiente inventario detalla los paquetes NuGet utilizados en cada proyecto d
 | NLog.Web.AspNetCore | 5.3.10 | Integra NLog con ASP.NET Core para logging estructurado. | La aplicación habilita NLog con `builder.Host.UseNLog()` y define layout renderers personalizados para registrar claims y encabezados seguros.【F:Backend/ProyectoBase.Api/Program.cs†L26-L27】【F:Backend/ProyectoBase.Api/Logging/SafeUserClaimsLayoutRenderer.cs†L12-L38】 |
 | Swashbuckle.AspNetCore | 6.6.2 | Genera la interfaz y documentos Swagger para la API. | `Program.cs` registra `AddSwaggerGen` y agrega definiciones de seguridad y filtros personalizados para documentar respuestas estándar.【F:Backend/ProyectoBase.Api/Program.cs†L48-L88】【F:Backend/ProyectoBase.Api/Swagger/Filters/DefaultResponsesOperationFilter.cs†L13-L50】 |
 | StyleCop.Analyzers | 1.2.0-beta.507 | Aplica reglas de estilo y análisis estático durante la compilación. | Se incluye como analizador con `PrivateAssets="all"` en el archivo de proyecto para reforzar el estilo sin distribuirlo en los consumidores.【F:Backend/ProyectoBase.Api/ProyectoBase.Api.Api.csproj†L25-L28】 |
+| Roslynator.Analyzers | 4.12.0 | Ofrece diagnósticos adicionales y sugerencias de refactorización para mejorar la calidad del código. | Se agrega como analizador con `PrivateAssets="all"` para ejecutar reglas adicionales de Roslynator durante la compilación.【F:Backend/ProyectoBase.Api/ProyectoBase.Api.Api.csproj†L29-L33】 |
 
 ## Backend/ProyectoBase.Application/ProyectoBase.Api.Application.csproj
 
@@ -26,12 +27,14 @@ El siguiente inventario detalla los paquetes NuGet utilizados en cada proyecto d
 | AutoMapper.Extensions.Microsoft.DependencyInjection | 12.0.1 | Registra perfiles de AutoMapper en el contenedor de dependencias. | `AddApplication` invoca `services.AddAutoMapper(...)` para descubrir y registrar los perfiles declarados en la asamblea.【F:Backend/ProyectoBase.Application/DependencyInjection.cs†L25-L33】 |
 | Microsoft.Extensions.Caching.Abstractions | 8.0.8 | Proporciona contratos de caché (memoria/distribuida) reutilizables. | `ProductService` interactúa con `IDistributedCache` para cachear resultados y reducir lecturas repetidas desde el repositorio.【F:Backend/ProyectoBase.Application/Services/Products/ProductService.cs†L26-L156】 |
 | StyleCop.Analyzers | 1.2.0-beta.507 | Enforce estilo consistente durante la compilación del proyecto de aplicación. | Declarado como analizador en el archivo de proyecto para ejecutar reglas de StyleCop sin exponerlas a consumidores.【F:Backend/ProyectoBase.Application/ProyectoBase.Api.Application.csproj†L22-L25】 |
+| Roslynator.Analyzers | 4.12.0 | Suma diagnósticos de calidad y sugerencias de refactorización para la capa de aplicación. | Registrado como analizador con `PrivateAssets="all"` para ejecutar reglas adicionales sin afectar a consumidores.【F:Backend/ProyectoBase.Application/ProyectoBase.Api.Application.csproj†L26-L30】 |
 
 ## Backend/ProyectoBase.Domain/ProyectoBase.Api.Domain.csproj
 
 | Paquete | Versión | Propósito | Ejemplo en el código |
 | --- | --- | --- | --- |
 | StyleCop.Analyzers | 1.2.0-beta.507 | Controla el cumplimiento de convenciones de estilo en la capa de dominio. | El paquete se agrega como analizador en el proyecto de dominio para validar estilo y documentación durante la compilación.【F:Backend/ProyectoBase.Domain/ProyectoBase.Api.Domain.csproj†L13-L18】 |
+| Roslynator.Analyzers | 4.12.0 | Aporta diagnósticos adicionales de mantenimiento y refactorización en la capa de dominio. | Incluido como analizador con `PrivateAssets="all"` para aplicar las reglas de Roslynator al compilar el dominio.【F:Backend/ProyectoBase.Domain/ProyectoBase.Api.Domain.csproj†L19-L23】 |
 
 ## Backend/ProyectoBase.Infrastructure/ProyectoBase.Api.Infrastructure.csproj
 
@@ -44,6 +47,7 @@ El siguiente inventario detalla los paquetes NuGet utilizados en cada proyecto d
 | Polly | 7.2.4 | Provee políticas de resiliencia (reintentos, circuit breakers). | `AddInfrastructure` define políticas `WaitAndRetryAsync` y `CircuitBreakerAsync`, que se combinan en `ResilientProductRepository` al ejecutar operaciones de datos.【F:Backend/ProyectoBase.Infrastructure/DependencyInjection.cs†L63-L108】【F:Backend/ProyectoBase.Infrastructure/Persistence/Repositories/ResilientProductRepository.cs†L11-L97】 |
 | System.IdentityModel.Tokens.Jwt | 7.6.0 | Genera y manipula tokens JWT firmados. | `TokenService` crea instancias de `JwtSecurityToken` y las serializa con `JwtSecurityTokenHandler` para emitir tokens de acceso.【F:Backend/ProyectoBase.Infrastructure/Authentication/TokenService.cs†L17-L55】 |
 | StyleCop.Analyzers | 1.2.0-beta.507 | Ejecuta reglas de estilo en la capa de infraestructura. | Incluido como analizador en el archivo de proyecto para reforzar la calidad del código.【F:Backend/ProyectoBase.Infrastructure/ProyectoBase.Api.Infrastructure.csproj†L23-L26】 |
+| Roslynator.Analyzers | 4.12.0 | Complementa los análisis con sugerencias de refactorización y mejores prácticas de Roslynator. | Declarado como analizador con `PrivateAssets="all"` para ejecutar diagnósticos adicionales durante la compilación.【F:Backend/ProyectoBase.Infrastructure/ProyectoBase.Api.Infrastructure.csproj†L27-L31】 |
 
 ## Backend/ProyectoBase.Application.Tests/ProyectoBase.Api.Application.Tests.csproj
 
@@ -55,6 +59,7 @@ El siguiente inventario detalla los paquetes NuGet utilizados en cada proyecto d
 | xunit.runner.visualstudio | 2.8.2 | Integra las pruebas xUnit con Visual Studio y otros runners basados en VS Test. | Declarado con `PrivateAssets="all"` para habilitar la ejecución desde `dotnet test` y herramientas de CI.【F:Backend/ProyectoBase.Application.Tests/ProyectoBase.Api.Application.Tests.csproj†L17-L20】 |
 | coverlet.collector | 6.0.4 | Recolecta métricas de cobertura de código durante la ejecución de pruebas. | Registrado en el archivo de proyecto para que `dotnet test` capture cobertura sin configuración adicional.【F:Backend/ProyectoBase.Application.Tests/ProyectoBase.Api.Application.Tests.csproj†L21-L24】 |
 | StyleCop.Analyzers | 1.2.0-beta.507 | Enforce estilo y convenciones en el código de pruebas. | Incluido como analizador con `PrivateAssets="all"` para revisar las pruebas sin afectar a consumidores externos.【F:Backend/ProyectoBase.Application.Tests/ProyectoBase.Api.Application.Tests.csproj†L25-L28】 |
+| Roslynator.Analyzers | 4.12.0 | Agrega diagnósticos adicionales para mantener el código de pruebas claro y consistente. | Registrado como analizador con `PrivateAssets="all"` para aplicar reglas de Roslynator durante las compilaciones de prueba.【F:Backend/ProyectoBase.Application.Tests/ProyectoBase.Api.Application.Tests.csproj†L29-L33】 |
 
 ## Backend/ProyectoBase.Domain.Tests/ProyectoBase.Api.Domain.Tests.csproj
 
@@ -67,6 +72,7 @@ El siguiente inventario detalla los paquetes NuGet utilizados en cada proyecto d
 | xunit.runner.visualstudio | 2.8.2 | Runner compatible con Visual Studio para ejecutar pruebas xUnit. | Configurado con `PrivateAssets` en el archivo de proyecto para habilitar la ejecución desde herramientas compatibles con VS Test.【F:Backend/ProyectoBase.Domain.Tests/ProyectoBase.Api.Domain.Tests.csproj†L14-L18】 |
 | coverlet.collector | 6.0.4 | Recolecta cobertura de código durante las pruebas de dominio. | Registrado en el archivo de proyecto para habilitar la recopilación automática de cobertura.【F:Backend/ProyectoBase.Domain.Tests/ProyectoBase.Api.Domain.Tests.csproj†L19-L22】 |
 | StyleCop.Analyzers | 1.2.0-beta.507 | Analiza el estilo del código en los proyectos de prueba de dominio. | Declarado como analizador con `PrivateAssets="all"` en el archivo de proyecto.【F:Backend/ProyectoBase.Domain.Tests/ProyectoBase.Api.Domain.Tests.csproj†L23-L26】 |
+| Roslynator.Analyzers | 4.12.0 | Detecta oportunidades de refactorización en las pruebas de dominio para mantenerlas legibles. | Declarado como analizador con `PrivateAssets="all"` para ejecutar reglas de Roslynator en el proyecto de pruebas.【F:Backend/ProyectoBase.Domain.Tests/ProyectoBase.Api.Domain.Tests.csproj†L27-L31】 |
 
 ## Backend/ProyectoBase.Api.IntegrationTests/ProyectoBase.Api.IntegrationTests.csproj
 
@@ -81,6 +87,7 @@ El siguiente inventario detalla los paquetes NuGet utilizados en cada proyecto d
 | xunit.runner.visualstudio | 2.8.2 | Runner VS Test para las pruebas de integración. | Configurado con `PrivateAssets="all"` en el proyecto para que las pruebas se ejecuten desde `dotnet test` y pipelines CI.【F:Backend/ProyectoBase.Api.IntegrationTests/ProyectoBase.Api.IntegrationTests.csproj†L16-L20】 |
 | coverlet.collector | 6.0.4 | Genera métricas de cobertura durante las pruebas de integración. | Registrado como colector de cobertura en el archivo de proyecto.【F:Backend/ProyectoBase.Api.IntegrationTests/ProyectoBase.Api.IntegrationTests.csproj†L21-L24】 |
 | StyleCop.Analyzers | 1.2.0-beta.507 | Aplica reglas de estilo a los archivos de pruebas de integración. | Incluido como analizador con `PrivateAssets="all"` en el archivo de proyecto.【F:Backend/ProyectoBase.Api.IntegrationTests/ProyectoBase.Api.IntegrationTests.csproj†L25-L28】 |
+| Roslynator.Analyzers | 4.12.0 | Añade diagnósticos de calidad y refactorización a las pruebas de integración. | Registrado como analizador con `PrivateAssets="all"` para aplicar reglas adicionales al compilar el proyecto de integración.【F:Backend/ProyectoBase.Api.IntegrationTests/ProyectoBase.Api.IntegrationTests.csproj†L29-L33】 |
 
 > **Nota:** Cada vez que se agreguen, actualicen o eliminen paquetes NuGet, actualizar esta tabla y las referencias de ejemplo correspondientes garantiza que el inventario se mantenga útil y vigente.
 
