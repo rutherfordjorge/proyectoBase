@@ -78,11 +78,11 @@ public static class DependencyInjection
             var circuitBreakerPolicy = Policy.Handle<Exception>().CircuitBreakerAsync(
                 handledEventsAllowedBeforeBreaking: 5,
                 durationOfBreak: TimeSpan.FromSeconds(30),
-                onBreak: (exception, breakDelay) =>
+                onBreak: (exception, breakDelay, _) =>
                 {
                     logger.LogError(exception, "Circuito abierto durante {Delay} segundos debido a fallas reiteradas.", breakDelay.TotalSeconds);
                 },
-                onReset: () => logger.LogInformation("Circuito cerrado: las operaciones se estabilizaron."),
+                onReset: _ => logger.LogInformation("Circuito cerrado: las operaciones se estabilizaron."),
                 onHalfOpen: () => logger.LogInformation("Circuito medio abierto: la siguiente llamada es de prueba."));
 
             registry.Add(RetryPolicyName, retryPolicy);
