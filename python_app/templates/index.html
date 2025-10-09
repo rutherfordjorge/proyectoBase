@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chef Visual</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <h1>Chef Visual</h1>
+        <p>
+          Sube una foto de tu comida y obten una sugerencia de receta y porciones
+          generada por IA ligera.
+        </p>
+      </header>
+
+      <section class="upload" id="upload-area">
+        <form id="upload-form">
+          <label for="image-input" class="drop-area">
+            <input type="file" id="image-input" name="image" accept="image/*" hidden />
+            <span class="icon">📷</span>
+            <span class="cta">Haz clic o arrastra una imagen aquí</span>
+            <span class="hint">Formatos permitidos: JPG, PNG, GIF (máx. 5 MB)</span>
+          </label>
+          <button type="submit">Analizar imagen</button>
+        </form>
+        <p class="error" id="error-message" role="alert"></p>
+      </section>
+
+      <section class="results hidden" id="results">
+        <div class="preview">
+          <img id="preview-image" alt="Vista previa de la imagen cargada" />
+        </div>
+        <div class="details">
+          <h2 id="category"></h2>
+          <p class="confidence"></p>
+
+          <article>
+            <h3 id="recipe-title"></h3>
+            <h4>Ingredientes</h4>
+            <ul id="ingredients"></ul>
+            <h4>Pasos</h4>
+            <ol id="steps"></ol>
+          </article>
+
+          <article class="portions">
+            <h3>Porciones sugeridas</h3>
+            <ul id="portions"></ul>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <template id="list-item">
+      <li></li>
+    </template>
+
+    <script>
+      const form = document.getElementById("upload-form");
+      const fileInput = document.getElementById("image-input");
+      const errorMessage = document.getElementById("error-message");
+      const results = document.getElementById("results");
+      const previewImage = document.getElementById("preview-image");
+      const category = document.getElementById("category");
+      const confidence = document.querySelector(".confidence");
+      const recipeTitle = document.getElementById("recipe-title");
+      const ingredients = document.getElementById("ingredients");
+      const steps = document.getElementById("steps");
+      const portions = document.getElementById("portions");
+      const listTemplate = document.getElementById("list-item");
+
+      const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
+      const VALID_TYPES = ["image/jpeg", "image/png", "image/gif"];
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        errorMessage.textContent = "";
+
+        if (!fileInput.files || fileInput.files.length === 0) {
+          errorMessage.textContent = "Selecciona una imagen antes de continuar.";
+          return;
+        }
+
+        const file = fileInput.files[0];
+        if (!VALID_TYPES.includes(file.type)) {
+          errorMessage.textContent = "El archivo debe ser JPG, PNG o GIF.";
+          return;
+        }
+
+        if (file.size > MAX_SIZE) {
+          errorMessage.textContent = "El archivo supera el tamaño máximo de 5 MB.";
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("image", file);
+
+        try {
+          const response = await fetch("/analyze", {
+            method: "POST",
+            body: formData,
+          });
+
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.error || "No se pudo analizar la imagen.");
+          }
+
+          renderResults(data);
+        } catch (error) {
+          errorMessage.textContent = error.message;
+        }
+      });
+
+      function renderResults(data) {
+        previewImage.src = data.image;
+        category.textContent = data.category;
+        confidence.textContent = `Confianza estimada: ${data.confidence}%`;
+        recipeTitle.textContent = data.recipe.titulo;
+
+        populateList(ingredients, data.recipe.ingredientes);
+        populateList(steps, data.recipe.pasos, true);
+
+        const portionsData = [
+          `Porción recomendada: ${data.portions.porcion_recomendada}`,
+          `Calorías estimadas: ${data.portions.calorias_estimadas} kcal`,
+        ];
+        populateList(portions, portionsData);
+
+        results.classList.remove("hidden");
+        results.scrollIntoView({ behavior: "smooth" });
+      }
+
+      function populateList(container, items, ordered = false) {
+        container.innerHTML = "";
+        items.forEach((item, index) => {
+          const element = listTemplate.content.firstElementChild.cloneNode(true);
+          element.textContent = ordered ? `${index + 1}. ${item}` : item;
+          container.appendChild(element);
+        });
+      }
+
+      fileInput.addEventListener("change", () => {
+        if (!fileInput.files || fileInput.files.length === 0) {
+          return;
+        }
+
+        const file = fileInput.files[0];
+        if (!VALID_TYPES.includes(file.type) || file.size > MAX_SIZE) {
+          previewImage.removeAttribute("src");
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          previewImage.src = event.target.result;
+          results.classList.remove("hidden");
+        };
+        reader.readAsDataURL(file);
+      });
+    </script>
+  </body>
+</html>
