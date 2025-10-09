@@ -251,3 +251,31 @@ Autenticación con JWT.
 CI/CD en GitHub Actions o Azure DevOps.
 Pruebas unitarias y E2E.
 ```
+
+## 🧠 Chef Visual (Python + IA ligera)
+
+Se incluye una miniaplicación en `python_app/` construida con **Flask** que permite:
+
+- Subir imágenes de comida (validación de tipo y tamaño hasta 5 MB).
+- Analizar colores predominantes de la imagen con Pillow para inferir la categoría del plato.
+- Generar sugerencias de recetas y porciones basadas en reglas heurísticas inspiradas en IA.
+
+### Ejecución
+
+```bash
+cd python_app
+python -m venv .venv
+source .venv/bin/activate  # En Windows usa .venv\Scripts\activate
+pip install -r requirements.txt
+python app.py
+```
+
+La aplicación quedará disponible en `http://localhost:5000`.
+
+### Uso
+
+1. Abre la página principal.
+2. Arrastra o selecciona una imagen de comida en formato JPG, PNG o GIF.
+3. Presiona **Analizar imagen** para obtener la categoría estimada, una receta sugerida y las porciones recomendadas.
+
+> ℹ️ El análisis utiliza heurísticas ligeras en función del color dominante y brillo de la imagen para ofrecer sugerencias inmediatas sin depender de servicios externos.
